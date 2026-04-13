@@ -36,6 +36,6 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         String requestUri = request.getRequestURI();
-        return !requestUri.contains("auth") || domjudgeProperties.isUseSpecialClient();
+        return !requestUri.contains("/cxtool/auth") || domjudgeProperties.isUseSpecialClient();
     }
 }

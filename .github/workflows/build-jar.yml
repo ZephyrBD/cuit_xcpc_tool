@@ -29,12 +29,19 @@ jobs:
         with:
           node-version: 20
 
+
       # 构建 Vue 前端
       - name: build Vue
         working-directory: ./vue
         run: |
           npm install
           npm run build
+
+      - name: build Board
+        working-directory: ./xcpcio
+        run: |
+          pnpm install
+          pnpm run build
 
       # 给Gradle执行权限
       - name: chmod Gradle

@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.ResponseMessageConstant;
-import top.techmczs.cuitxcpctool.entity.DjTeam;
+import top.techmczs.cuitxcpctool.entity.Team;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjTeamService;
 
@@ -45,7 +45,7 @@ public class DjTeamController {
 
     @GetMapping("/team/page")
     @Operation(description = "分页查询所有队伍")
-    public Result<IPage<DjTeam>> getAllTeamsByPage(@Parameter(description = "当前查询的页码") @RequestParam(value = "cur_page") int curPage){
+    public Result<IPage<Team>> getAllTeamsByPage(@Parameter(description = "当前查询的页码") @RequestParam(value = "cur_page") int curPage){
         return Result.success(djTeamService.queryTeamsByPage(curPage));
     }
 

@@ -32,7 +32,7 @@ import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.SseEventConstant;
 import top.techmczs.cuitxcpctool.dto.PrintTaskDTO;
 import top.techmczs.cuitxcpctool.dto.PrintTeamDTO;
-import top.techmczs.cuitxcpctool.entity.DjTeam;
+import top.techmczs.cuitxcpctool.entity.Team;
 import top.techmczs.cuitxcpctool.entity.PrintTask;
 import top.techmczs.cuitxcpctool.exception.GetFileErrorException;
 import top.techmczs.cuitxcpctool.exception.QueueTaskException;
@@ -110,12 +110,12 @@ public class DjPrintServiceImpl implements DjPrintService {
         printTaskMapper.selectPage(taskPage, null);
 
         List<PrintTaskDTO> dtoList = taskPage.getRecords().stream().map(task -> {
-            DjTeam djTeam = djTeamMapper.selectById(task.getExamNum());
-            if (djTeam == null) throw new TeamNotExistException(MessageConstant.TEAM_NOT_FOUND);
+            Team team = djTeamMapper.selectById(task.getExamNum());
+            if (team == null) throw new TeamNotExistException(MessageConstant.TEAM_NOT_FOUND);
             return new PrintTaskDTO()
                     .setTaskId(task.getId())
-                    .setTeamName(djTeam.getTeamName())
-                    .setTeamPosition(djTeam.getPosition())
+                    .setTeamName(team.getTeamName())
+                    .setTeamPosition(team.getPosition())
                     .setStatus(task.getStatus());
         }).toList();
 
@@ -146,9 +146,9 @@ public class DjPrintServiceImpl implements DjPrintService {
         if (tasks.isEmpty()) return Collections.emptyList();
 
         return tasks.stream().map(task -> {
-            DjTeam djTeam = djTeamMapper.selectById(task.getExamNum());
-            String teamName = djTeam == null ? MessageConstant.UNKNOWN_TEAM: djTeam.getTeamName();
-            String position = djTeam == null ? MessageConstant.UNKNOWN_TEAM_POSITION: djTeam.getPosition();
+            Team team = djTeamMapper.selectById(task.getExamNum());
+            String teamName = team == null ? MessageConstant.UNKNOWN_TEAM: team.getTeamName();
+            String position = team == null ? MessageConstant.UNKNOWN_TEAM_POSITION: team.getPosition();
 
             return new PrintTaskDTO()
                     .setTaskId(task.getId())

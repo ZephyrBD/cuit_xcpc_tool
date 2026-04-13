@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import top.techmczs.cuitxcpctool.constant.ResponseMessageConstant;
-import top.techmczs.cuitxcpctool.entity.Balloon;
+import top.techmczs.cuitxcpctool.dto.BalloonTaskDTO;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjBalloonService;
 
@@ -34,14 +34,14 @@ import top.techmczs.cuitxcpctool.services.DjBalloonService;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/admin/balloon")
-@Tag(name = "Balloon",description = "返回包装后的Domjudge气球信息")
+@Tag(name = "BalloonTaskDTO",description = "返回包装后的Domjudge气球信息")
 public class DjBalloonController {
 
     private final DjBalloonService djBalloonService;
 
     @GetMapping("/task/page")
     @Operation(description = "分页查询所有气球小票任务")
-    public Result<IPage<Balloon>> getAllPrintTask(@Parameter(description = "当前查询的页码") @RequestParam(value = "cur_page") int curPage){
+    public Result<IPage<BalloonTaskDTO>> getAllPrintTask(@Parameter(description = "当前查询的页码") @RequestParam(value = "cur_page") int curPage){
         return Result.success(djBalloonService.getAllBalloonFromDomjudge(curPage));
     }
 

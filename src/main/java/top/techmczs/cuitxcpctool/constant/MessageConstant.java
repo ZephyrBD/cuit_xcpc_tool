@@ -26,10 +26,10 @@ public class MessageConstant {
     public static final String UNKNOWN_TEAM = "Unknown Team";
     public static final String UNKNOWN_TEAM_POSITION = "Unknown Position";
 
-    public static final String PUSH_BALLOON_TASK_SUCCESS = "Push Balloon Task {} Success!";
-    public static final String SKIP_BALLOON_TASK = "Skip Balloon Task!";
-    public static final String GET_BALLOON_TASK_SUCCESS = "Get Balloon {} Task: {}.";
-    public static final String SET_BALLOON_TASK_DONE_FAILED = "Set Balloon Task done Failed, ID: {}.";
+    public static final String PUSH_BALLOON_TASK_SUCCESS = "Push BalloonTaskDTO Task {} Success!";
+    public static final String SKIP_BALLOON_TASK = "Skip BalloonTaskDTO Task!";
+    public static final String GET_BALLOON_TASK_SUCCESS = "Get BalloonTaskDTO {} Task: {}.";
+    public static final String SET_BALLOON_TASK_DONE_FAILED = "Set BalloonTaskDTO Task done Failed, ID: {}.";
     public static final String TASK_TO_DO = "Todo";
     public static final String TASK_ALL = "All";
 

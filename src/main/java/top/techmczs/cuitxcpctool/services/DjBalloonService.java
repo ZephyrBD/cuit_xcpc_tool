@@ -20,10 +20,10 @@ package top.techmczs.cuitxcpctool.services;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Component;
-import top.techmczs.cuitxcpctool.entity.Balloon;
+import top.techmczs.cuitxcpctool.dto.BalloonTaskDTO;
 
 @Component
 public interface DjBalloonService {
-    IPage<Balloon> getAllBalloonFromDomjudge(int cur);
+    IPage<BalloonTaskDTO> getAllBalloonFromDomjudge(int cur);
     void setBalloonDone(Long id);
 }

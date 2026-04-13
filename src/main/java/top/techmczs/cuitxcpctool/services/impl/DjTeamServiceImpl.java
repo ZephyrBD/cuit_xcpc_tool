@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import top.techmczs.cuitxcpctool.constant.MessageConstant;
-import top.techmczs.cuitxcpctool.entity.DjTeam;
+import top.techmczs.cuitxcpctool.entity.Team;
 import top.techmczs.cuitxcpctool.exception.ImportExcelException;
 import top.techmczs.cuitxcpctool.mapper.DjTeamMapper;
 import top.techmczs.cuitxcpctool.services.DjTeamService;
@@ -41,16 +41,16 @@ public class DjTeamServiceImpl implements DjTeamService {
     private final DjTeamMapper djTeamMapper;
 
     @Override
-    public IPage<DjTeam> queryTeamsByPage(int curPage) {
-        Page<DjTeam> page = new Page<>(curPage, 10);
+    public IPage<Team> queryTeamsByPage(int curPage) {
+        Page<Team> page = new Page<>(curPage, 10);
         return djTeamMapper.selectPage(page, null);
     }
 
     @Override
     public void importTeamExcel(MultipartFile file) {
         try {
-            List<DjTeam> teamList = EasyExcel.read(file.getInputStream())
-                    .head(DjTeam.class)
+            List<Team> teamList = EasyExcel.read(file.getInputStream())
+                    .head(Team.class)
                     .sheet()
                     .doReadSync();
 

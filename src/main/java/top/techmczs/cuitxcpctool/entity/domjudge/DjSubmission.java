@@ -16,38 +16,29 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package top.techmczs.cuitxcpctool.entity;
+package top.techmczs.cuitxcpctool.entity.domjudge;
 
-import com.alibaba.excel.annotation.ExcelProperty;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-import java.io.Serializable;
-
-/**
- * 对应数据库表 dj_team
- */
 @Data
-@TableName("dj_team") // 绑定表名
-public class DjTeam implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Accessors(chain=true)
+public class DjSubmission {
+    @JsonProperty("id")
+    private String id;
 
-    @ExcelProperty("examNumber") // Excel列名
-    @TableId
-    private String examNumber;
+    @JsonProperty("team_id")
+    private String teamId;
 
-    @ExcelProperty("teamName") // Excel列名
-    private String teamName;
+    @JsonProperty("problem_id")
+    private String problemId;
 
-    @ExcelProperty("school")
-    private String school;
+    @JsonProperty("contest_time")
+    private String contestTime;
 
-    @ExcelProperty("position")
-    private String position;
-
-    @ExcelProperty("account")
-    private String account;
-
-    @ExcelProperty("password")
-    private String password;
+    @JsonProperty("language_id")
+    private String languageId;
 }

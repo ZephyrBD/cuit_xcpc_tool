@@ -16,24 +16,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package top.techmczs.cuitxcpctool.entity;
+package top.techmczs.cuitxcpctool.entity.domjudge;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.time.LocalDateTime;
-
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Accessors(chain=true)
-public class Balloon {
-    public Balloon() {
-    }
-    private Long balloonId;
-    private LocalDateTime time;
-    private String teamName;
-    private String teamLocation;
-    private String problem;
-    private String colorName;
-    private Boolean isFirst;
-    private Boolean isFinished;
+public class DjContest {
+    @JsonProperty("id")
+    private String id;
+
+    @JsonProperty("formal_name")
+    private String formalName;
+
+    @JsonProperty("start_time")
+    private String startTime;
+
+    @JsonProperty("end_time")
+    private String endTime;
+
+    @JsonProperty("scoreboard_freeze_duration")
+    private String scoreboardFreezeDuration;
+
+    @JsonProperty("penalty_time")
+    private Integer penaltyTime;
 }

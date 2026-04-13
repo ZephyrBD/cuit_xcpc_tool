@@ -35,7 +35,7 @@ import top.techmczs.cuitxcpctool.dto.AdminDTO;
 import top.techmczs.cuitxcpctool.dto.AuthTaskDTO;
 import top.techmczs.cuitxcpctool.dto.DjTeamDTO;
 import top.techmczs.cuitxcpctool.entity.AuthTask;
-import top.techmczs.cuitxcpctool.entity.DjTeam;
+import top.techmczs.cuitxcpctool.entity.Team;
 import top.techmczs.cuitxcpctool.entity.TeamClient;
 import top.techmczs.cuitxcpctool.exception.AuthTaskNotExistException;
 import top.techmczs.cuitxcpctool.exception.IllegalClientException;
@@ -105,12 +105,12 @@ public class DjAuthServiceImpl implements DjAuthService {
         if (tasks.isEmpty()) return Collections.emptyList();
 
         List<String> examNums = tasks.stream().map(AuthTask::getExamNum).toList();
-        List<DjTeam> teamList = djTeamMapper.selectByIds(examNums);
-        Map<String, DjTeam> teamMap = new HashMap<>();
+        List<Team> teamList = djTeamMapper.selectByIds(examNums);
+        Map<String, Team> teamMap = new HashMap<>();
         teamList.forEach(team -> teamMap.put(team.getExamNumber(), team));
 
         return tasks.stream().map(task -> {
-            DjTeam team = teamMap.get(task.getExamNum());
+            Team team = teamMap.get(task.getExamNum());
             String teamName = team == null ? MessageConstant.UNKNOWN_TEAM : team.getTeamName();
             return new AuthTaskDTO(
                     task.getId(),
@@ -144,33 +144,33 @@ public class DjAuthServiceImpl implements DjAuthService {
         }
 
         // 查询队伍
-        DjTeam djTeam = djTeamMapper.selectOne(new QueryWrapper<DjTeam>().lambda().eq(DjTeam::getExamNumber,examNum));
+        Team team = djTeamMapper.selectOne(new QueryWrapper<Team>().lambda().eq(Team::getExamNumber,examNum));
 
-        if(djTeam == null){
+        if(team == null){
             log.error(MessageConstant.TEAM_NOT_FOUND,examNum);
             throw new TeamNotExistException(MessageConstant.TEAM_NOT_FOUND);
         }
 
-        String oldClientId = getClientIdFromTeamClient(djTeam.getExamNumber());
+        String oldClientId = getClientIdFromTeamClient(team.getExamNumber());
 
         // 判断是否是新设备
         boolean isNewDevice = (oldClientId != null) && !oldClientId.isBlank() && !clientId.equals(oldClientId);
 
-        AuthTask authTask = new AuthTask(oldClientId,clientId,djTeam.getExamNumber());
+        AuthTask authTask = new AuthTask(oldClientId,clientId, team.getExamNumber());
 
-        log.info(MessageConstant.TEAM_NEED_LOGIN,djTeam.getTeamName());
+        log.info(MessageConstant.TEAM_NEED_LOGIN, team.getTeamName());
 
         //是新设备，发前端判断
         if (isNewDevice) {
-            enqueueAuthTask(new AuthTask(oldClientId,clientId,djTeam.getExamNumber()),false);
-            log.warn(MessageConstant.TEAM_LOGIN_AGAIN,djTeam.getTeamName());
+            enqueueAuthTask(new AuthTask(oldClientId,clientId, team.getExamNumber()),false);
+            log.warn(MessageConstant.TEAM_LOGIN_AGAIN, team.getTeamName());
             return null;
         }
 
         enqueueAuthTask(authTask.setOldClientId(clientId),true);
         DjTeamDTO djTeamDTO = new DjTeamDTO().setToken(verifyAndGetToken(userAgent,examNum));
         saveClientIdToTeamClient(examNum,clientId);
-        BeanUtils.copyProperties(djTeam,djTeamDTO);
+        BeanUtils.copyProperties(team,djTeamDTO);
         String url = domjudgeProperties.getVerifyUrl();
         djTeamDTO.setDjUrl(url).setLoginTime(LocalDateTime.now());
         return djTeamDTO;
@@ -178,12 +178,12 @@ public class DjAuthServiceImpl implements DjAuthService {
 
     @Override
     public DjTeamDTO getApprovedTeamInfo(String examNum) {
-        DjTeam djTeam = djTeamMapper.selectById(examNum);
-        if (djTeam == null) {
+        Team team = djTeamMapper.selectById(examNum);
+        if (team == null) {
             throw new TeamNotExistException();
         }
         DjTeamDTO djTeamDTO = new DjTeamDTO();
-        BeanUtils.copyProperties(djTeam, djTeamDTO);
+        BeanUtils.copyProperties(team, djTeamDTO);
         String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), jwtProperties.getTtl(),examNum);
         String url = domjudgeProperties.getVerifyUrl();
         djTeamDTO.setToken(token).setDjUrl(url).setLoginTime(LocalDateTime.now());
@@ -242,15 +242,15 @@ public class DjAuthServiceImpl implements DjAuthService {
                 .map(AuthTask::getExamNum)
                 .toList();
 
-        List<DjTeam> djTeamList = djTeamMapper.selectByIds(tmp);
-        Map<String,DjTeam> teamMap = new HashMap<>();
-        djTeamList.forEach(djTeam -> teamMap.put(djTeam.getExamNumber(),djTeam));
+        List<Team> teamList = djTeamMapper.selectByIds(tmp);
+        Map<String, Team> teamMap = new HashMap<>();
+        teamList.forEach(djTeam -> teamMap.put(djTeam.getExamNumber(),djTeam));
 
         List<AuthTaskDTO> dtoList = taskPage.getRecords().stream().map(task -> {
-            DjTeam djTeam = teamMap.get(task.getExamNum());
+            Team team = teamMap.get(task.getExamNum());
             return new AuthTaskDTO(
                     task.getId(),
-                    djTeam.getTeamName(),
+                    team.getTeamName(),
                     task.getExamNum(),
                     task.getCreateTime(),
                     task.getStatus()

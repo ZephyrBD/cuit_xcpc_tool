@@ -34,8 +34,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.SseEventConstant;
-import top.techmczs.cuitxcpctool.entity.Balloon;
-import top.techmczs.cuitxcpctool.entity.DjBalloon;
+import top.techmczs.cuitxcpctool.dto.BalloonTaskDTO;
+import top.techmczs.cuitxcpctool.entity.domjudge.DjBalloon;
 import top.techmczs.cuitxcpctool.properties.DomjudgeProperties;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjBalloonService;
@@ -77,10 +77,10 @@ public class DjBalloonServiceImpl implements DjBalloonService {
 
         for (DjBalloon dto : tempList) {
             try {
-                Balloon balloon = DjBallonToBalloon(dto);
+                BalloonTaskDTO balloonTaskDTO = DjBallonToBalloon(dto);
                 // 走全局SSE广播
-                sseManagerService.broadcast(SseEventConstant.BALLOON_TASK, Result.success(balloon));
-                log.info(MessageConstant.PUSH_BALLOON_TASK_SUCCESS, balloon.getBalloonId());
+                sseManagerService.broadcast(SseEventConstant.BALLOON_TASK, Result.success(balloonTaskDTO));
+                log.info(MessageConstant.PUSH_BALLOON_TASK_SUCCESS, balloonTaskDTO.getBalloonId());
             } catch (Exception e) {
                 log.error(MessageConstant.SKIP_BALLOON_TASK);
             }
@@ -93,21 +93,20 @@ public class DjBalloonServiceImpl implements DjBalloonService {
     }
 
     @Override
-    public IPage<Balloon> getAllBalloonFromDomjudge(int cur) {
+    public IPage<BalloonTaskDTO> getAllBalloonFromDomjudge(int cur) {
         List<DjBalloon> dtoList = fetchBalloon(false);
-        List<Balloon> balloonList = Objects.nonNull(dtoList) ?
+        List<BalloonTaskDTO> balloonTaskDTOList = Objects.nonNull(dtoList) ?
                 dtoList.stream().map(this::DjBallonToBalloon).toList() : Collections.emptyList();
 
-        Page<Balloon> page = new Page<>(cur, 10);
-        page.setRecords(balloonList);
-        page.setTotal(balloonList.size());
+        Page<BalloonTaskDTO> page = new Page<>(cur, 10);
+        page.setRecords(balloonTaskDTOList);
+        page.setTotal(balloonTaskDTOList.size());
         return page;
     }
 
     private List<DjBalloon> fetchBalloon(boolean isTodo) {
         try {
-            String auth = domjudgeProperties.getAuth();
-            String basicAuth = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
+            String basicAuth = domjudgeProperties.getBasicAuth();
 
             RequestEntity<Void> request = RequestEntity
                     .get(domjudgeProperties.getDomjudgeBalloonApiUrl(isTodo))
@@ -133,7 +132,7 @@ public class DjBalloonServiceImpl implements DjBalloonService {
         }
     }
 
-    private Balloon DjBallonToBalloon(DjBalloon balloonDto) {
+    private BalloonTaskDTO DjBallonToBalloon(DjBalloon balloonDto) {
         try {
             boolean isFirst =
                     !FIRST_SOLVE.containsKey(balloonDto.getContestProblem().getShortName())
@@ -148,8 +147,8 @@ public class DjBalloonServiceImpl implements DjBalloonService {
                 teamName = teamName.split(": ")[1];
             }
 
-            Balloon balloon = new Balloon();
-            balloon.setBalloonId(balloonDto.getBalloonId())
+            BalloonTaskDTO balloonTaskDTO = new BalloonTaskDTO();
+            balloonTaskDTO.setBalloonId(balloonDto.getBalloonId())
                     .setProblem(balloonDto.getContestProblem().getShortName())
                     .setTeamName(teamName)
                     .setTeamLocation(balloonDto.getLocation())
@@ -158,9 +157,9 @@ public class DjBalloonServiceImpl implements DjBalloonService {
                     .setIsFinished(balloonDto.getDone())
                     .setIsFirst(isFirst);
 
-            return balloon;
+            return balloonTaskDTO;
         } catch (Exception e) {
-            return new Balloon();
+            return new BalloonTaskDTO();
         }
     }
 
@@ -169,7 +168,7 @@ public class DjBalloonServiceImpl implements DjBalloonService {
         try {
             String auth = domjudgeProperties.getAuth();
             String basicAuth = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
-            String url = domjudgeProperties.getDomjudgeBalloonApiUrl(id);
+            String url = domjudgeProperties.getDomjudgeBalloonDoneUrl(id);
 
             RequestEntity<Void> request = RequestEntity
                     .post(url)

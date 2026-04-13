@@ -16,12 +16,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package top.techmczs.cuitxcpctool.mapper;
+package top.techmczs.cuitxcpctool.dto.board;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
-import top.techmczs.cuitxcpctool.entity.Team;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Mapper
-public interface DjTeamMapper extends BaseMapper<Team> {
+import java.util.Map;
+
+@Data
+@Accessors(chain=true)
+public class BoardContestListDTO {
+    @JsonProperty("icpc")
+    private Map<String, Map<String, Object>> icpc;
 }

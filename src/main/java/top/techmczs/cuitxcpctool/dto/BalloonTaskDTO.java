@@ -16,12 +16,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package top.techmczs.cuitxcpctool.mapper;
+package top.techmczs.cuitxcpctool.dto;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
-import top.techmczs.cuitxcpctool.entity.Team;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Mapper
-public interface DjTeamMapper extends BaseMapper<Team> {
+import java.time.LocalDateTime;
+
+@Data
+@Accessors(chain=true)
+public class BalloonTaskDTO {
+    public BalloonTaskDTO() {
+    }
+    private Long balloonId;
+    private LocalDateTime time;
+    private String teamName;
+    private String teamLocation;
+    private String problem;
+    private String colorName;
+    private Boolean isFirst;
+    private Boolean isFinished;
 }

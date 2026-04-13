@@ -21,10 +21,10 @@ package top.techmczs.cuitxcpctool.services;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import top.techmczs.cuitxcpctool.entity.DjTeam;
+import top.techmczs.cuitxcpctool.entity.Team;
 
 @Component
 public interface DjTeamService {
-    IPage<DjTeam> queryTeamsByPage(int curPage);
+    IPage<Team> queryTeamsByPage(int curPage);
     void importTeamExcel(MultipartFile file);
 }

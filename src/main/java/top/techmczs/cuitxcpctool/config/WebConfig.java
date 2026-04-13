@@ -20,9 +20,7 @@ package top.techmczs.cuitxcpctool.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import top.techmczs.cuitxcpctool.interceptor.AuthInterceptor;
 import top.techmczs.cuitxcpctool.interceptor.LoginInterceptor;
 
@@ -32,6 +30,11 @@ public class WebConfig implements WebMvcConfigurer {
     private final LoginInterceptor loginInterceptor;
     private final AuthInterceptor authInterceptor;
 
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/board/")
+                .setViewName("forward:/board/index.html");
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

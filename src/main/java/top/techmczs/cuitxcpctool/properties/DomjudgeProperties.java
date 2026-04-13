@@ -22,6 +22,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 @Component
 @ConfigurationProperties(prefix = "org.domjudge")
 @Data
@@ -43,14 +46,20 @@ public class DomjudgeProperties {
         return account + ":" + password;
     }
 
+    public String getBaseUrl(){
+        return this.host + ":" + this.port + routePath;
+    }
     public String getDomjudgeBalloonApiUrl(Boolean isNotDone){
-        return this.host + ":" + this.port + routePath + "/api/v4/contests/" + contestId + "/balloons?todo=" + isNotDone.toString();
+        return this.getBaseUrl() + "/api/v4/contests/" + contestId + "/balloons?todo=" + isNotDone.toString();
     }
 
-    public String getDomjudgeBalloonApiUrl(Long balloonId){
-        return this.host + ":" + this.port + routePath + "/api/v4/contests/" + contestId + "/balloons" + "/" + balloonId + "/done";
+    public String getDomjudgeBalloonDoneUrl(Long balloonId){
+        return this.getBaseUrl() + "/api/v4/contests/" + contestId + "/balloons" + "/" + balloonId + "/done";
     }
 
+    public String getBasicAuth(){
+        return "Basic " + Base64.getEncoder().encodeToString(this.getAuth().getBytes(StandardCharsets.UTF_8));
+    }
     public String getVerifyUrl(){
         return this.host + ":" + this.port + this.nginxVerifyRoutePath;
     }

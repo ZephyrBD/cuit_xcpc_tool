@@ -16,12 +16,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package top.techmczs.cuitxcpctool.mapper;
+package top.techmczs.cuitxcpctool.services;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
-import top.techmczs.cuitxcpctool.entity.Team;
+import org.springframework.stereotype.Component;
+import top.techmczs.cuitxcpctool.entity.domjudge.*;
 
-@Mapper
-public interface DjTeamMapper extends BaseMapper<Team> {
+import java.util.List;
+
+@Component
+public interface DomjudgeFetchService {
+    DjContest getContest();
+    List<DjProblem> getProblems();
+    List<DjTeam> getTeams();
+    List<DjSubmission> getSubmissions();
+    List<DjJudgement> getJudgements();
 }

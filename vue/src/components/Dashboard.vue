@@ -26,7 +26,8 @@
           <p>Copyright © DSA Laboratory</p>
           <p>Designed and Powered By ZephyrBD</p>
           <div class="header-buttons">
-            <button class="domjudge-btn" @click="gotoDomjudge">转到 Domjudge</button>
+            <button class="normal-btn" @click="gotoBoard">查看外榜</button>
+            <button class="normal-btn" @click="gotoDomjudge">转到 Domjudge</button>
             <button class="new-contest-btn" @click="showNewContestDialog">开始新比赛</button>
             <button class="logout-btn" @click="handleLogout">登出系统</button>
           </div>
@@ -69,12 +70,12 @@
           />
         </el-tab-pane>
 
-        <el-tab-pane label="气球任务" name="balloon">
+        <el-tab-pane label="气球任务" name="balloonTaskDTO">
           <BalloonTab
-            :balloon-table-data="balloonTableData"
-            :balloon-current-page="balloonCurrentPage"
-            :balloon-page-size="balloonPageSize"
-            :balloon-total="balloonTotal"
+            :balloonTaskDTO-table-data="balloonTableData"
+            :balloonTaskDTO-current-page="balloonCurrentPage"
+            :balloonTaskDTO-page-size="balloonPageSize"
+            :balloonTaskDTO-total="balloonTotal"
             @refresh="fetchBalloonTasks"
             @page-change="handleBalloonPageChange"
             @start-auto="startAutoBalloon"
@@ -183,7 +184,7 @@ const fetchPrintTasks = async () => {
   if(r.data.code===1){printTableData.value=r.data.data.records;printTotal.value=r.data.data.total;}
 };
 const fetchBalloonTasks = async () => {
-  const r=await api.balloon.getBalloonTasks(balloonCurrentPage.value);
+  const r=await api.balloonTaskDTO.getBalloonTasks(balloonCurrentPage.value);
   if(r.data.code===1){balloonTableData.value=r.data.data.records;balloonTotal.value=r.data.data.total;}
 };
 const fetchTeams = async () => {
@@ -238,7 +239,7 @@ const connectGlobalSse = () => {
         currentBalloonTask.value = task;
         balloonStatus.value = { type: 'loading', message: '正在自动打印气球小票...' };
         printBalloonTxt(task, formatDateTime);
-        await api.balloon.doneBalloonTask(task.balloonId);
+        await api.balloonTaskDTO.doneBalloonTask(task.balloonId);
         balloonStatus.value = { type: 'success', message: '气球小票自动打印完成' };
         setTimeout(() => { currentBalloonTask.value = null; balloonStatus.value = null; }, 3000);
       }
@@ -281,7 +282,7 @@ const handleBalloonPrint = async (row) => {
   const l=ElLoading.service({lock:true,text:'打印中...'});
   try{
     printBalloonTxt(row, formatDateTime);
-    await api.balloon.doneBalloonTask(row.balloonId);
+    await api.balloonTaskDTO.doneBalloonTask(row.balloonId);
     fetchBalloonTasks();ElMessage.success('打印成功');
   }catch{ElMessage.error('失败');}finally{l.close();}
 };
@@ -296,6 +297,10 @@ const confirmNewContest = async () => {
     fetchAuthTasks();fetchPrintTasks();ElMessage.success('完成');
   }catch{ElMessage.error('失败');}finally{l.close();}
 };
+
+const gotoBoard = async => {
+  window.open('/cxtool/board/', '_blank');
+}
 
 const gotoDomjudge = async () => {
   const l=ElLoading.service({lock:true,text:'获取中...',target:'.header-section'});
@@ -433,7 +438,7 @@ body {
   background: #f57c00;
 }
 
-.domjudge-btn,
+.normal-btn,
 .new-contest-btn {
   padding: 8px 16px;
   border-radius: 8px;
@@ -447,12 +452,12 @@ body {
   justify-content: center;
 }
 
-.domjudge-btn {
+.normal-btn {
   background: rgba(255,255,255,0.16);
   color: white;
 }
 
-.domjudge-btn:hover {
+.normal-btn:hover {
   background: rgba(255,255,255,0.24);
 }
 

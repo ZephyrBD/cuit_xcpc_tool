@@ -15,13 +15,21 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+package top.techmczs.cuitxcpctool.utils;
 
-package top.techmczs.cuitxcpctool.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
-import top.techmczs.cuitxcpctool.entity.Team;
-
-@Mapper
-public interface DjTeamMapper extends BaseMapper<Team> {
+public class StatusMappingUtil {
+    // DOMjudge → XCPCIO 状态映射
+    public static String convert(String djStatus) {
+        return switch (djStatus) {
+            case "AC" -> "ACCEPTED";
+            case "WA" -> "WRONG_ANSWER";
+            case "TLE" -> "TIME_LIMIT_EXCEEDED";
+            case "RTE" -> "RUNTIME_ERROR";
+            case "MLE" -> "MEMORY_LIMIT_EXCEEDED";
+            case "OLE" -> "OUTPUT_LIMIT_EXCEEDED";
+            case "CE" -> "COMPILATION_ERROR";
+            default -> "PENDING";
+        };
+    }
 }

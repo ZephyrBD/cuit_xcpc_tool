@@ -18,31 +18,36 @@
 
 package top.techmczs.cuitxcpctool.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
+/**
+ * 对应数据库表 dj_team
+ */
 @Data
-@Accessors(chain = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class DjBalloon {
-    @JsonProperty("balloonid")
-    private Long balloonId;
-    private String time;
-    private String team;
-    private String location;
+@TableName("dj_team") // 绑定表名
+public class Team implements Serializable {
 
-    @JsonProperty("contestproblem")
-    private ContestProblem contestProblem;
-    private Boolean done;
+    @ExcelProperty("examNumber") // Excel列名
+    @TableId
+    private String examNumber;
 
-    @Data
-    @Accessors(chain = true)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class ContestProblem {
-        @JsonProperty("short_name")
-        private String shortName;
-        private String color;
-    }
+    @ExcelProperty("teamName") // Excel列名
+    private String teamName;
+
+    @ExcelProperty("school")
+    private String school;
+
+    @ExcelProperty("position")
+    private String position;
+
+    @ExcelProperty("account")
+    private String account;
+
+    @ExcelProperty("password")
+    private String password;
 }

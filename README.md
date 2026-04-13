@@ -91,8 +91,14 @@ public String getVerifyUrl(){
 | ---------- | -------- | ------ | -------- | -------------- | -------------- |
 | {考号}       | {队名}     | {学习}   | {座位}     | {Domjudge队伍账号} | {Domjudge队伍密码} |
 
+### 集成xcpcio/board
+
+将xcpcio/board集成进来作为了外榜，有小幅修改。
+
+参考[xcpcio/xcpcio](https://github.com/xcpcio/xcpcio/)，使用MIT授权。
+
 ### 构建
 
-1. 需要先构建`vue`，构建后的文件会自动放入`static`。
+1. 需要先构建`xcpcio/board`和`vue`，构建后的文件会自动放入`static`。
 
 2. 构建`jar`。
