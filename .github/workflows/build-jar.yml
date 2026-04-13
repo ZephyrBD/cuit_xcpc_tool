@@ -8,14 +8,11 @@ jobs:
   build:
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    # 运行环境
     runs-on: ubuntu-latest
     steps:
-      # 拉取代码
       - name: pull project codes
         uses: actions/checkout@v4
 
-      # 设置 Java 环境
       - name: set JDK 21
         uses: actions/setup-java@v4
         with:
@@ -23,12 +20,13 @@ jobs:
           distribution: 'liberica'
           cache: gradle
 
-      # 设置 Node.js 环境
-      - name: set Node.js
+      - name: set Node.js 20 + 启用 pnpm
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      - name: install pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
       # 构建 Vue 前端
       - name: build Vue
@@ -37,6 +35,7 @@ jobs:
           npm install
           npm run build
 
+      # 构建 XCPCIO Board（现在 pnpm 可用）
       - name: build Board
         working-directory: ./xcpcio
         run: |
@@ -51,8 +50,8 @@ jobs:
       - name: build Jar
         run: ./gradlew clean build -x test
 
-      # 上传Jar包（可直接下载使用）
-      - name: upload
+      # 上传Jar包
+      - name: upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: cuit_xcpc_tool

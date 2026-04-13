@@ -1,7 +1,5 @@
 # CUIT XCPC TOOL
 
----
-
 一个用于简化代码打印和气球打印的XCPC工具，为CUIT的XCPC校赛开发。
 
 ### 使用
