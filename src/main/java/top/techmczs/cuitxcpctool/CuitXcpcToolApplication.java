@@ -36,7 +36,7 @@ public class CuitXcpcToolApplication implements ApplicationListener<ServletWebSe
     private static int serverPort;
 
     // UTODO 需要完善Swagger
-    public static final String CXTOOL_VERSION = "0.5-Preview";
+    public static final String CXTOOL_VERSION = "0.5.1-Preview";
 
     public static void main(String[] args) {
         printTitle();

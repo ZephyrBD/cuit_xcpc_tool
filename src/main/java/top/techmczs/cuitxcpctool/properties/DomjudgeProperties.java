@@ -49,13 +49,6 @@ public class DomjudgeProperties {
     public String getBaseUrl(){
         return this.host + ":" + this.port + routePath;
     }
-    public String getDomjudgeBalloonApiUrl(Boolean isNotDone){
-        return this.getBaseUrl() + "/api/v4/contests/" + contestId + "/balloons?todo=" + isNotDone.toString();
-    }
-
-    public String getDomjudgeBalloonDoneUrl(Long balloonId){
-        return this.getBaseUrl() + "/api/v4/contests/" + contestId + "/balloons" + "/" + balloonId + "/done";
-    }
 
     public String getBasicAuth(){
         return "Basic " + Base64.getEncoder().encodeToString(this.getAuth().getBytes(StandardCharsets.UTF_8));

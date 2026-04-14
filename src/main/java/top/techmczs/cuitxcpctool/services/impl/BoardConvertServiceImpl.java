@@ -24,7 +24,9 @@ import top.techmczs.cuitxcpctool.dto.board.BoardContestConfigDTO;
 import top.techmczs.cuitxcpctool.dto.board.BoardContestListDTO;
 import top.techmczs.cuitxcpctool.dto.board.BoardRunDTO;
 import top.techmczs.cuitxcpctool.dto.board.BoardTeamDTO;
+import top.techmczs.cuitxcpctool.entity.Team;
 import top.techmczs.cuitxcpctool.entity.domjudge.*;
+import top.techmczs.cuitxcpctool.mapper.TeamMapper;
 import top.techmczs.cuitxcpctool.services.BoardConvertService;
 import top.techmczs.cuitxcpctool.services.DomjudgeFetchService;
 import top.techmczs.cuitxcpctool.utils.StatusMappingUtil;
@@ -38,6 +40,8 @@ import java.util.stream.Collectors;
 public class BoardConvertServiceImpl implements BoardConvertService {
 
     private final DomjudgeFetchService domjudgeFetchService;
+
+    private final TeamMapper teamMapper;
 
     @Override
     public BoardContestListDTO buildContestList() {
@@ -103,9 +107,10 @@ public class BoardConvertServiceImpl implements BoardConvertService {
 
         BoardContestConfigDTO.Medal medal = new BoardContestConfigDTO.Medal();
         BoardContestConfigDTO.Medal.Official official = new BoardContestConfigDTO.Medal.Official();
-        official.setGold(0);
-        official.setSilver(0);
-        official.setBronze(0);
+        DjMedals medals = domjudgeFetchService.getMedals();
+        official.setGold(medals.getGold());
+        official.setSilver(medals.getSilver());
+        official.setBronze(medals.getBronze());
         medal.setOfficial(official);
         config.setMedal(medal);
 
@@ -132,8 +137,10 @@ public class BoardConvertServiceImpl implements BoardConvertService {
         List<BoardTeamDTO> result = new ArrayList<>();
 
         for (DjTeam dj : djTeams) {
-            if (Boolean.TRUE.equals(dj.getHidden())) continue;
-
+            // 跳过隐藏队伍
+            if (Boolean.TRUE.equals(dj.getHidden())) {
+                continue;
+            }
             BoardTeamDTO team = new BoardTeamDTO();
             team.setId(dj.getId());
             team.setName(dj.getName());
@@ -141,18 +148,43 @@ public class BoardConvertServiceImpl implements BoardConvertService {
             team.setGroup(dj.getGroupIds().contains("participants") ? List.of("official") : List.of("unofficial"));
             team.setLocation(dj.getLocation() != null ? dj.getLocation().getDescription() : "");
             team.setIcpcId(Objects.requireNonNullElse(dj.getIcpcId(), ""));
+            // 从数据库查询本地队伍数据
+            Team localTeam = teamMapper.selectById(dj.getId());
+            if (localTeam == null) {
+                result.add(team);
+                continue;
+            }
+            List<BoardTeamDTO.Coach> coachList = new ArrayList<>();
+            String coachStr = localTeam.getCoach();
+            if (coachStr != null && !coachStr.isBlank()) {
+                // 按逗号分割，支持 1个/多个教练
+                String[] coachNames = coachStr.split(",");
+                for (String name : coachNames) {
+                    BoardTeamDTO.Name coachName = new BoardTeamDTO.Name();
+                    coachName.setFallbackLang("zh-CN");
+                    coachName.setTexts(Map.of("zh-CN", name.trim()));
 
-            BoardTeamDTO.Name name = new BoardTeamDTO.Name();
-            name.setFallbackLang("zh-CN");
-            name.setTexts(Collections.singletonMap("zh-CN", ""));
+                    BoardTeamDTO.Coach coach = new BoardTeamDTO.Coach();
+                    coach.setName(coachName);
+                    coachList.add(coach);
+                }
+            }
+            team.setCoaches(coachList);
+            List<BoardTeamDTO.Member> memberList = new ArrayList<>();
+            String teammateStr = localTeam.getTeammate();
+            if (teammateStr != null && !teammateStr.isBlank()) {
+                String[] memberNames = teammateStr.split(",");
+                for (String name : memberNames) {
+                    BoardTeamDTO.Name memberName = new BoardTeamDTO.Name();
+                    memberName.setFallbackLang("zh-CN");
+                    memberName.setTexts(Map.of("zh-CN", name.trim()));
 
-            BoardTeamDTO.Coach coach = new BoardTeamDTO.Coach();
-            coach.setName(name);
-            team.setCoaches(List.of(coach));
-
-            BoardTeamDTO.Member member = new BoardTeamDTO.Member();
-            member.setName(name);
-            team.setMembers(List.of(member));
+                    BoardTeamDTO.Member member = new BoardTeamDTO.Member();
+                    member.setName(memberName);
+                    memberList.add(member);
+                }
+            }
+            team.setMembers(memberList);
 
             result.add(team);
         }
@@ -176,9 +208,9 @@ public class BoardConvertServiceImpl implements BoardConvertService {
             run.setId(sub.getId());
             run.setTeamId(sub.getTeamId());
             run.setProblemId(problemMap.get(sub.getProblemId()));
-            run.setTimestamp(TimeUtil.durationToSeconds(sub.getContestTime()));
+            run.setTimestamp(TimeUtil.durationToMillis(sub.getContestTime()));
             run.setStatus(StatusMappingUtil.convert(judgeMap.getOrDefault(sub.getId(), "PENDING")));
-            run.setLanguage("C++");
+            run.setLanguage(sub.getLanguageId());
             runs.add(run);
         }
         return runs;

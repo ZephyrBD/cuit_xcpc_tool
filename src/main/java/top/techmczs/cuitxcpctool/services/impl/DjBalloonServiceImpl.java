@@ -20,29 +20,21 @@ package top.techmczs.cuitxcpctool.services.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.SseEventConstant;
 import top.techmczs.cuitxcpctool.dto.BalloonTaskDTO;
 import top.techmczs.cuitxcpctool.entity.domjudge.DjBalloon;
-import top.techmczs.cuitxcpctool.properties.DomjudgeProperties;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjBalloonService;
+import top.techmczs.cuitxcpctool.services.DomjudgeFetchService;
 import top.techmczs.cuitxcpctool.services.SseManagerService;
 import top.techmczs.cuitxcpctool.utils.TimeUtil;
 
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -52,18 +44,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class DjBalloonServiceImpl implements DjBalloonService {
 
     // 注入全局SSE管理器
-    @Resource
-    private SseManagerService sseManagerService;
-
-    private final DomjudgeProperties domjudgeProperties;
-    @Resource
-    private RestTemplate restTemplate;
-    @Resource
-    private ObjectMapper objectMapper;
+    private final SseManagerService sseManagerService;
 
     // 待推送气球队列
     private final List<DjBalloon> NEW_BALLOONS = new CopyOnWriteArrayList<>();
     private final Map<String, Long> FIRST_SOLVE = Collections.synchronizedMap(new HashMap<>());
+    @Autowired
+    private DomjudgeFetchService domjudgeFetchService;
 
     @Scheduled(fixedRate = 500)
     public void pushBalloonToClients() {
@@ -106,21 +93,7 @@ public class DjBalloonServiceImpl implements DjBalloonService {
 
     private List<DjBalloon> fetchBalloon(boolean isTodo) {
         try {
-            String basicAuth = domjudgeProperties.getBasicAuth();
-
-            RequestEntity<Void> request = RequestEntity
-                    .get(domjudgeProperties.getDomjudgeBalloonApiUrl(isTodo))
-                    .header(HttpHeaders.AUTHORIZATION, basicAuth)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .build();
-
-            ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-            List<DjBalloon> dtoList = objectMapper.readValue(response.getBody(), new TypeReference<>() {});
-
-            log.info(MessageConstant.GET_BALLOON_TASK_SUCCESS,
-                    isTodo ? MessageConstant.TASK_TO_DO : MessageConstant.TASK_ALL,
-                    dtoList == null ? 0 : dtoList.size());
-
+            List<DjBalloon> dtoList = domjudgeFetchService.getBalloons(isTodo);
             if (isTodo && dtoList != null && !dtoList.isEmpty()) {
                 NEW_BALLOONS.addAll(dtoList);
             }
@@ -134,9 +107,7 @@ public class DjBalloonServiceImpl implements DjBalloonService {
 
     private BalloonTaskDTO DjBallonToBalloon(DjBalloon balloonDto) {
         try {
-            boolean isFirst =
-                    !FIRST_SOLVE.containsKey(balloonDto.getContestProblem().getShortName())
-                    || FIRST_SOLVE.get(balloonDto.getContestProblem().getShortName()).equals(balloonDto.getBalloonId());
+            boolean isFirst = !FIRST_SOLVE.containsKey(balloonDto.getContestProblem().getShortName()) || FIRST_SOLVE.get(balloonDto.getContestProblem().getShortName()).equals(balloonDto.getBalloonId());
 
             if (FIRST_SOLVE.containsKey(balloonDto.getContestProblem().getShortName())) {
                 FIRST_SOLVE.put(balloonDto.getContestProblem().getShortName(), balloonDto.getBalloonId());
@@ -165,18 +136,6 @@ public class DjBalloonServiceImpl implements DjBalloonService {
 
     @Override
     public void setBalloonDone(Long id) {
-        try {
-            String auth = domjudgeProperties.getAuth();
-            String basicAuth = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
-            String url = domjudgeProperties.getDomjudgeBalloonDoneUrl(id);
-
-            RequestEntity<Void> request = RequestEntity
-                    .post(url)
-                    .header(HttpHeaders.AUTHORIZATION, basicAuth)
-                    .build();
-            restTemplate.exchange(request, String.class);
-        } catch (Exception e) {
-            log.error(MessageConstant.SET_BALLOON_TASK_DONE_FAILED, id);
-        }
+        domjudgeFetchService.setBalloonDone(id);
     }
 }

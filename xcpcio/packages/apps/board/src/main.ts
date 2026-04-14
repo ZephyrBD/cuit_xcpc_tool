@@ -6,9 +6,7 @@ import FloatingVue from "floating-vue";
 import { setupLayouts } from "virtual:generated-layouts";
 import { ViteSSG } from "vite-ssg";
 import { routes } from "vue-router/auto-routes";
-// 👇 第一步：导入 Hash 路由核心方法
 import { createWebHashHistory } from "vue-router";
-// import Previewer from 'virtual:vue-component-preview'
 import App from "./App.vue";
 
 import "floating-vue/dist/style.css";
@@ -21,22 +19,26 @@ import "uno.css";
 
 import "./styles/main.css";
 
+// 修复 Edge 下窗口无法最小化的问题
+window.addEventListener("mousedown", (e) => {
+    if (e.clientY <= 40) {
+        e.preventDefault = () => {};
+    }
+}, true);
+
 // https://github.com/antfu/vite-ssg
 export const createApp = ViteSSG(
-  App,
-  {
-    routes: setupLayouts(routes),
-    base: window.BASE_URL ?? import.meta.env.BASE_URL,
-    // 👇 第二步：核心！开启 Hash 路由模式（自动继承 base 路径）
-    history: createWebHashHistory(window.BASE_URL ?? import.meta.env.BASE_URL),
-  },
-  (ctx) => {
-    // install all modules under `modules/`
-    Object.values(import.meta.glob<{ install: UserModule }>("./modules/*.ts", { eager: true }))
-      .forEach(i => i.install?.(ctx));
+    App,
+    {
+        routes: setupLayouts(routes),
+        base: window.BASE_URL ?? import.meta.env.BASE_URL,
+        history: createWebHashHistory(window.BASE_URL ?? import.meta.env.BASE_URL),
+    },
+    (ctx) => {
+        Object.values(import.meta.glob<{ install: UserModule }>("./modules/*.ts", { eager: true }))
+            .forEach(i => i.install?.(ctx));
 
-    // ctx.app.use(Previewer)
-    ctx.app.use(FloatingVue);
-    ctx.app.use(VueQueryPlugin);
-  },
+        ctx.app.use(FloatingVue);
+        ctx.app.use(VueQueryPlugin);
+    },
 );

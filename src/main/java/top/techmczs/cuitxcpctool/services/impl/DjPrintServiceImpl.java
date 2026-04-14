@@ -37,7 +37,7 @@ import top.techmczs.cuitxcpctool.entity.PrintTask;
 import top.techmczs.cuitxcpctool.exception.GetFileErrorException;
 import top.techmczs.cuitxcpctool.exception.QueueTaskException;
 import top.techmczs.cuitxcpctool.exception.TeamNotExistException;
-import top.techmczs.cuitxcpctool.mapper.DjTeamMapper;
+import top.techmczs.cuitxcpctool.mapper.TeamMapper;
 import top.techmczs.cuitxcpctool.mapper.PrintTaskMapper;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjPrintService;
@@ -59,7 +59,7 @@ public class DjPrintServiceImpl implements DjPrintService {
 
     private final SqlQueue<PrintTask> printTaskQueue;
     private final PrintTaskMapper printTaskMapper;
-    private final DjTeamMapper djTeamMapper;
+    private final TeamMapper teamMapper;
 
     @Override
     public void addPrintTask(MultipartFile file, PrintTeamDTO printTeamDTO) {
@@ -110,7 +110,7 @@ public class DjPrintServiceImpl implements DjPrintService {
         printTaskMapper.selectPage(taskPage, null);
 
         List<PrintTaskDTO> dtoList = taskPage.getRecords().stream().map(task -> {
-            Team team = djTeamMapper.selectById(task.getExamNum());
+            Team team = teamMapper.selectById(task.getExamNum());
             if (team == null) throw new TeamNotExistException(MessageConstant.TEAM_NOT_FOUND);
             return new PrintTaskDTO()
                     .setTaskId(task.getId())
@@ -146,7 +146,7 @@ public class DjPrintServiceImpl implements DjPrintService {
         if (tasks.isEmpty()) return Collections.emptyList();
 
         return tasks.stream().map(task -> {
-            Team team = djTeamMapper.selectById(task.getExamNum());
+            Team team = teamMapper.selectById(task.getExamNum());
             String teamName = team == null ? MessageConstant.UNKNOWN_TEAM: team.getTeamName();
             String position = team == null ? MessageConstant.UNKNOWN_TEAM_POSITION: team.getPosition();
 

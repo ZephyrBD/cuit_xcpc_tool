@@ -19,20 +19,24 @@
 package top.techmczs.cuitxcpctool.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.yaml.snakeyaml.Yaml;
 import top.techmczs.cuitxcpctool.entity.domjudge.*;
 import top.techmczs.cuitxcpctool.properties.DomjudgeProperties;
 import top.techmczs.cuitxcpctool.services.DomjudgeFetchService;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DomjudgeFetchServiceImpl implements DomjudgeFetchService {
 
     private final RestTemplate restTemplate;
@@ -41,7 +45,7 @@ public class DomjudgeFetchServiceImpl implements DomjudgeFetchService {
 
     private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", domjudgeProperties.getBasicAuth());
+        headers.set(HttpHeaders.AUTHORIZATION, domjudgeProperties.getBasicAuth());
         return headers;
     }
 
@@ -98,4 +102,44 @@ public class DomjudgeFetchServiceImpl implements DomjudgeFetchService {
                 new ParameterizedTypeReference<List<DjJudgement>>() {}
         ).getBody();
     }
+
+    @Override
+    public DjMedals getMedals() {
+        // 获取 YAML 原始字符串
+        String yamlContent = restTemplate.exchange(
+                getUrl("/contest-yaml"),
+                HttpMethod.GET,
+                new HttpEntity<>(getHeaders()),
+                String.class
+        ).getBody();
+        // 解析 YAML，只提取 medals 节点
+        Yaml yaml = new Yaml();
+        Map<String, Object> rootMap = yaml.load(yamlContent);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> medalsMap = (Map<String, Object>) rootMap.get("medals");
+
+        // 将 medals Map 转为 DjMedals 对象
+        return yaml.loadAs(yaml.dump(medalsMap), DjMedals.class);
+    }
+
+    @Override
+    public List<DjBalloon> getBalloons(Boolean isTodo) {
+        return restTemplate.exchange(
+                getUrl("/balloons?todo="+isTodo.toString()),
+                HttpMethod.GET,
+                new HttpEntity<>(getHeaders()),
+                new ParameterizedTypeReference<List<DjBalloon>>() {}
+        ).getBody();
+    }
+
+    @Override
+    public void setBalloonDone(Long id) {
+        restTemplate.exchange(
+                getUrl("/balloons/" + id + "/done"),
+                HttpMethod.POST,
+                new HttpEntity<>(getHeaders()),
+                String.class
+        );
+    }
+
 }

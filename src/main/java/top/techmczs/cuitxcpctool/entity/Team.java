@@ -50,4 +50,11 @@ public class Team implements Serializable {
 
     @ExcelProperty("password")
     private String password;
+
+    @ExcelProperty("teammate")
+    private String teammate;
+
+    @ExcelProperty("coach")
+    private String coach;
+
 }

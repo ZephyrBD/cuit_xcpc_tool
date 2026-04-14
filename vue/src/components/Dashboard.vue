@@ -70,12 +70,12 @@
           />
         </el-tab-pane>
 
-        <el-tab-pane label="气球任务" name="balloonTaskDTO">
+        <el-tab-pane label="气球任务" name="balloon">
           <BalloonTab
-            :balloonTaskDTO-table-data="balloonTableData"
-            :balloonTaskDTO-current-page="balloonCurrentPage"
-            :balloonTaskDTO-page-size="balloonPageSize"
-            :balloonTaskDTO-total="balloonTotal"
+            :balloon-table-data="balloonTableData"
+            :balloon-current-page="balloonCurrentPage"
+            :balloon-page-size="balloonPageSize"
+            :balloon-total="balloonTotal"
             @refresh="fetchBalloonTasks"
             @page-change="handleBalloonPageChange"
             @start-auto="startAutoBalloon"
@@ -184,7 +184,7 @@ const fetchPrintTasks = async () => {
   if(r.data.code===1){printTableData.value=r.data.data.records;printTotal.value=r.data.data.total;}
 };
 const fetchBalloonTasks = async () => {
-  const r=await api.balloonTaskDTO.getBalloonTasks(balloonCurrentPage.value);
+  const r=await api.balloon.getBalloonTasks(balloonCurrentPage.value);
   if(r.data.code===1){balloonTableData.value=r.data.data.records;balloonTotal.value=r.data.data.total;}
 };
 const fetchTeams = async () => {
@@ -239,7 +239,7 @@ const connectGlobalSse = () => {
         currentBalloonTask.value = task;
         balloonStatus.value = { type: 'loading', message: '正在自动打印气球小票...' };
         printBalloonTxt(task, formatDateTime);
-        await api.balloonTaskDTO.doneBalloonTask(task.balloonId);
+        await api.balloon.doneBalloonTask(task.balloonId);
         balloonStatus.value = { type: 'success', message: '气球小票自动打印完成' };
         setTimeout(() => { currentBalloonTask.value = null; balloonStatus.value = null; }, 3000);
       }
@@ -282,7 +282,7 @@ const handleBalloonPrint = async (row) => {
   const l=ElLoading.service({lock:true,text:'打印中...'});
   try{
     printBalloonTxt(row, formatDateTime);
-    await api.balloonTaskDTO.doneBalloonTask(row.balloonId);
+    await api.balloon.doneBalloonTask(row.balloonId);
     fetchBalloonTasks();ElMessage.success('打印成功');
   }catch{ElMessage.error('失败');}finally{l.close();}
 };

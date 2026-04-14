@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.entity.Team;
 import top.techmczs.cuitxcpctool.exception.ImportExcelException;
-import top.techmczs.cuitxcpctool.mapper.DjTeamMapper;
+import top.techmczs.cuitxcpctool.mapper.TeamMapper;
 import top.techmczs.cuitxcpctool.services.DjTeamService;
 
 import java.util.List;
@@ -38,12 +38,12 @@ import java.util.List;
 @Slf4j
 public class DjTeamServiceImpl implements DjTeamService {
 
-    private final DjTeamMapper djTeamMapper;
+    private final TeamMapper teamMapper;
 
     @Override
     public IPage<Team> queryTeamsByPage(int curPage) {
         Page<Team> page = new Page<>(curPage, 10);
-        return djTeamMapper.selectPage(page, null);
+        return teamMapper.selectPage(page, null);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class DjTeamServiceImpl implements DjTeamService {
                     .sheet()
                     .doReadSync();
 
-            djTeamMapper.delete(null);
-            djTeamMapper.insert(teamList);
+            teamMapper.delete(null);
+            teamMapper.insert(teamList);
         } catch (Exception e) {
             throw new ImportExcelException(MessageConstant.IMPORT_TEAM_FROM_EXCEL);
         }

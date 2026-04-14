@@ -1,3 +1,5 @@
+<script setup lang="ts">
+</script>
 <template>
   <footer
     mt-8
@@ -106,6 +108,9 @@
         to="/"
         hover:underline
       >XCPCIO™</RouterLink>. All Rights Reserved.</span>
+      <span text-sm text-gray-500 sm:text-center dark:text-gray-400 w-full>
+        <br> <a href="https://github.com/ZephyrBD/cuit_xcpc_tool" hover:underline>CUIT XCPC TOOL</a> embeds the xcpcio board under the MIT license, and the data is provided by CUIT XCPC TOOL.
+      </span>
     </div>
   </footer>
 </template>

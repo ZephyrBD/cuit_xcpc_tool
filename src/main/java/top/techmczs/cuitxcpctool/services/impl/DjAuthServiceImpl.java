@@ -42,7 +42,7 @@ import top.techmczs.cuitxcpctool.exception.IllegalClientException;
 import top.techmczs.cuitxcpctool.exception.IllegalTokenException;
 import top.techmczs.cuitxcpctool.exception.TeamNotExistException;
 import top.techmczs.cuitxcpctool.mapper.AuthTaskMapper;
-import top.techmczs.cuitxcpctool.mapper.DjTeamMapper;
+import top.techmczs.cuitxcpctool.mapper.TeamMapper;
 import top.techmczs.cuitxcpctool.mapper.TeamClientMapper;
 import top.techmczs.cuitxcpctool.properties.DomjudgeProperties;
 import top.techmczs.cuitxcpctool.properties.JwtProperties;
@@ -68,7 +68,7 @@ public class DjAuthServiceImpl implements DjAuthService {
     private final DomjudgeProperties domjudgeProperties;
     private final JwtProperties jwtProperties;
     private final SqlQueue<AuthTask> authTaskQueue;
-    private final DjTeamMapper djTeamMapper;
+    private final TeamMapper teamMapper;
     private final AuthTaskMapper authTaskMapper;
     private final TeamClientMapper teamClientMapper;
 
@@ -105,7 +105,7 @@ public class DjAuthServiceImpl implements DjAuthService {
         if (tasks.isEmpty()) return Collections.emptyList();
 
         List<String> examNums = tasks.stream().map(AuthTask::getExamNum).toList();
-        List<Team> teamList = djTeamMapper.selectByIds(examNums);
+        List<Team> teamList = teamMapper.selectByIds(examNums);
         Map<String, Team> teamMap = new HashMap<>();
         teamList.forEach(team -> teamMap.put(team.getExamNumber(), team));
 
@@ -144,7 +144,7 @@ public class DjAuthServiceImpl implements DjAuthService {
         }
 
         // 查询队伍
-        Team team = djTeamMapper.selectOne(new QueryWrapper<Team>().lambda().eq(Team::getExamNumber,examNum));
+        Team team = teamMapper.selectOne(new QueryWrapper<Team>().lambda().eq(Team::getExamNumber,examNum));
 
         if(team == null){
             log.error(MessageConstant.TEAM_NOT_FOUND,examNum);
@@ -178,7 +178,7 @@ public class DjAuthServiceImpl implements DjAuthService {
 
     @Override
     public DjTeamDTO getApprovedTeamInfo(String examNum) {
-        Team team = djTeamMapper.selectById(examNum);
+        Team team = teamMapper.selectById(examNum);
         if (team == null) {
             throw new TeamNotExistException();
         }
@@ -242,7 +242,7 @@ public class DjAuthServiceImpl implements DjAuthService {
                 .map(AuthTask::getExamNum)
                 .toList();
 
-        List<Team> teamList = djTeamMapper.selectByIds(tmp);
+        List<Team> teamList = teamMapper.selectByIds(tmp);
         Map<String, Team> teamMap = new HashMap<>();
         teamList.forEach(djTeam -> teamMap.put(djTeam.getExamNumber(),djTeam));
 

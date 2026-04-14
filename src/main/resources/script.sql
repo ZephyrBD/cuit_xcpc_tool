@@ -25,6 +25,8 @@ create table if not exists dj_team
     position    varchar(50) not null,
     account     varchar(50) not null,
     password    varchar(50) not null,
+    teammate   varchar(100) not null,
+    coach       varchar(50),
     constraint position unique (position)
     );
 comment on table dj_team is '存放Domjudge队伍信息的表';

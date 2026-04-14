@@ -30,4 +30,7 @@ public interface DomjudgeFetchService {
     List<DjTeam> getTeams();
     List<DjSubmission> getSubmissions();
     List<DjJudgement> getJudgements();
+    List<DjBalloon> getBalloons(Boolean isTodo);
+    DjMedals getMedals();
+    void setBalloonDone(Long id);
 }

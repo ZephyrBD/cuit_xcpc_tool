@@ -85,9 +85,9 @@ public String getVerifyUrl(){
 
 上传的xlsx文件表头应该是：
 
-| examNumber | teamName | school | position | account        | password       |
-| ---------- | -------- | ------ | -------- | -------------- | -------------- |
-| {考号}       | {队名}     | {学习}   | {座位}     | {Domjudge队伍账号} | {Domjudge队伍密码} |
+| examNumber | teamName | school | position | account        | password       | teammate           | coach       |
+| ---------- | -------- | ------ | -------- | -------------- | -------------- |--------------------| -------------- |
+| {考号}       | {队名}     | {学习}   | {座位}     | {Domjudge队伍账号} | {Domjudge队伍密码} | {name1},{name2},.. | {name1},{name2},.. |
 
 ### 集成xcpcio/board
 

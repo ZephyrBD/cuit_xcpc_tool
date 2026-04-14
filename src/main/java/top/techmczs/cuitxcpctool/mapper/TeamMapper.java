@@ -23,5 +23,5 @@ import org.apache.ibatis.annotations.Mapper;
 import top.techmczs.cuitxcpctool.entity.Team;
 
 @Mapper
-public interface DjTeamMapper extends BaseMapper<Team> {
+public interface TeamMapper extends BaseMapper<Team> {
 }

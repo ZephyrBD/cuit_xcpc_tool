@@ -42,4 +42,23 @@ public class TimeUtil {
         double seconds = Double.parseDouble(parts[2]);
         return (int) (hours * 3600L + minutes * 60L + seconds);
     }
+
+    public static long durationToMillis(String duration) {
+        String[] parts = duration.split(":");
+        // 小时
+        int hours = Integer.parseInt(parts[0]);
+        // 分钟
+        int minutes = Integer.parseInt(parts[1]);
+        // 秒.毫秒 拆分
+        String[] secAndMillis = parts[2].split("\\.");
+        int seconds = Integer.parseInt(secAndMillis[0]);
+        // 不足3位自动补全（兼容 190 / 90 格式）
+        int millis = Integer.parseInt(secAndMillis.length > 1 ? secAndMillis[1] : "0");
+
+        // 计算总毫秒
+        return hours * 3600L * 1000
+                + minutes * 60L * 1000
+                + seconds * 1000L
+                + millis;
+    }
 }

@@ -33,12 +33,14 @@
         stripe
         :header-cell-style="{background: '#fafafa', color: '#424242'}"
       >
-        <el-table-column prop="teamName" label="队伍名称" min-width="150" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="school" label="学校" min-width="180" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="teamName" label="队伍名称" min-width="120" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="school" label="学校" min-width="120" show-overflow-tooltip></el-table-column>
         <el-table-column prop="position" label="位置" min-width="120" show-overflow-tooltip></el-table-column>
         <el-table-column prop="examNumber" label="考号" min-width="120"></el-table-column>
         <el-table-column prop="account" label="账号" min-width="120"></el-table-column>
         <el-table-column prop="password" label="密码" min-width="120"></el-table-column>
+        <el-table-column prop="teammate" label="队员" min-width="120"></el-table-column>
+        <el-table-column prop="coach" label="教练" min-width="120"></el-table-column>
       </el-table>
     </div>
 
