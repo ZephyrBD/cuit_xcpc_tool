@@ -1,5 +1,5 @@
-import type { Contest, Submissions, Teams } from "@xcpcio/types";
-import { useQuery } from "@tanstack/vue-query";
+import type {Contest, Submissions, Teams} from "@xcpcio/types";
+import {useQuery} from "@tanstack/vue-query";
 
 export interface BoardData {
   contest: Contest;

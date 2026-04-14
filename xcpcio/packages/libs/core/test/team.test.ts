@@ -1,8 +1,8 @@
 import fs from "node:fs";
-import { resolve } from "node:path";
-import { createTeams } from "@xcpcio/core";
+import {resolve} from "node:path";
+import {createTeams} from "@xcpcio/core";
 
-import { describe, expect, it } from "vitest";
+import {describe, expect, it} from "vitest";
 
 describe("team", () => {
   it("2023_ccpc_final", () => {

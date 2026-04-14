@@ -1,4 +1,4 @@
-import type { CalculationOfPenalty, ContestOptions as IContestOptions, Image, TimeUnit } from "@xcpcio/types";
+import type {CalculationOfPenalty, ContestOptions as IContestOptions, Image, TimeUnit} from "@xcpcio/types";
 
 export class ContestOptions {
   enableOrganization: boolean;

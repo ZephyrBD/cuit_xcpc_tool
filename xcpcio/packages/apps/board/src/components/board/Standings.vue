@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Rank } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
-import { GiantsType, Team } from "@xcpcio/core";
+import type {Rank} from "@xcpcio/core";
+import {GiantsType, Team} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
 const props = defineProps<{
   rank: Rank;

@@ -27,6 +27,7 @@ import top.techmczs.cuitxcpctool.dto.board.BoardTeamDTO;
 import top.techmczs.cuitxcpctool.entity.Team;
 import top.techmczs.cuitxcpctool.entity.domjudge.*;
 import top.techmczs.cuitxcpctool.mapper.TeamMapper;
+import top.techmczs.cuitxcpctool.properties.ToolProperties;
 import top.techmczs.cuitxcpctool.services.BoardConvertService;
 import top.techmczs.cuitxcpctool.services.DomjudgeFetchService;
 import top.techmczs.cuitxcpctool.utils.StatusMappingUtil;
@@ -42,6 +43,7 @@ public class BoardConvertServiceImpl implements BoardConvertService {
     private final DomjudgeFetchService domjudgeFetchService;
 
     private final TeamMapper teamMapper;
+    private final ToolProperties toolProperties;
 
     @Override
     public BoardContestListDTO buildContestList() {
@@ -203,13 +205,20 @@ public class BoardConvertServiceImpl implements BoardConvertService {
                 .collect(Collectors.toMap(DjProblem::getId, DjProblem::getOrdinal));
 
         List<BoardRunDTO> runs = new ArrayList<>();
+        DjContest djContest = domjudgeFetchService.getContest();
+        long freezeTime = TimeUtil.durationToSeconds(djContest.getScoreboardFreezeDuration()) * 1000L;
+        long unFreezeTime = TimeUtil.isoToMills(djContest.getEndTime()) + toolProperties.getUnfreezeBoardTime() * 60 * 60 * 1000L;
         for (DjSubmission sub : submissions) {
             BoardRunDTO run = new BoardRunDTO();
             run.setId(sub.getId());
             run.setTeamId(sub.getTeamId());
             run.setProblemId(problemMap.get(sub.getProblemId()));
             run.setTimestamp(TimeUtil.durationToMillis(sub.getContestTime()));
-            run.setStatus(StatusMappingUtil.convert(judgeMap.getOrDefault(sub.getId(), "PENDING")));
+            if(freezeTime < run.getTimestamp() && run.getTimestamp() < unFreezeTime){
+                run.setStatus("PENDING");
+            } else {
+                run.setStatus(StatusMappingUtil.convert(judgeMap.getOrDefault(sub.getId(), "PENDING")));
+            }
             run.setLanguage(sub.getLanguageId());
             runs.add(run);
         }

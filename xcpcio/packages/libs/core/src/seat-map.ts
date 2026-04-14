@@ -1,8 +1,8 @@
-import type { SeatMap as ISeatMap, SeatMapSection as ISeatMapSection } from "@xcpcio/types";
+import type {SeatMap as ISeatMap, SeatMapSection as ISeatMapSection} from "@xcpcio/types";
 
-import type { Team, Teams } from "./team";
+import type {Team, Teams} from "./team";
 
-import { I18nText } from "./basic-types";
+import {I18nText} from "./basic-types";
 
 export class SeatMapSection {
   title: I18nText;

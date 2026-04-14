@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Rank } from "@xcpcio/core";
+import type {Rank} from "@xcpcio/core";
 
-import { Chart } from "highcharts-vue";
+import {Chart} from "highcharts-vue";
 
 const props = defineProps<{
   rank: Rank;

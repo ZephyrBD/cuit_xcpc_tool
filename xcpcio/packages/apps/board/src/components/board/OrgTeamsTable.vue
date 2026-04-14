@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Rank, Team } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
+import type {Rank, Team} from "@xcpcio/core";
+import {MedalType} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
-import { Pagination } from "@board/composables/pagination";
-import { MedalType } from "@xcpcio/core";
+import {Pagination} from "@board/composables/pagination";
 
 const props = defineProps<{
   rank: Rank;

@@ -19,6 +19,8 @@
 package top.techmczs.cuitxcpctool.utils;
 
 import org.springframework.core.io.ClassPathResource;
+import top.techmczs.cuitxcpctool.properties.JwtProperties;
+import top.techmczs.cuitxcpctool.properties.ToolProperties;
 
 import java.io.*;
 import java.util.Properties;
@@ -87,17 +89,7 @@ public class SettingsCheckUtil {
             haltWithError("ERROR: Server port must be a valid number!");
         }
 
-        String[] requiredKeys = {
-                "org.domjudge.host",
-                "org.domjudge.route-path",
-                "org.domjudge.port",
-                "org.domjudge.contest-id",
-                "org.domjudge.account",
-                "org.domjudge.password",
-                "org.domjudge.print-token",
-                "top.jwt.secret-key",
-                "top.jwt.admin-password"
-        };
+        String[] requiredKeys = ConfigKeyUtil.getRequiredConfigKeys(ToolProperties.class,JwtProperties.class);
 
         for (String key : requiredKeys) {
             if (props.getProperty(key, "").isBlank()) {

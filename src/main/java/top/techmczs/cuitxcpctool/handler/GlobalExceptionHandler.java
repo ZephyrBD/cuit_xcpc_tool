@@ -21,6 +21,7 @@ package top.techmczs.cuitxcpctool.handler;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +30,8 @@ import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.ResponseMessageConstant;
 import top.techmczs.cuitxcpctool.exception.BaseException;
 import top.techmczs.cuitxcpctool.result.Result;
+
+import java.io.IOException;
 
 @RestControllerAdvice
 @Slf4j
@@ -57,11 +60,16 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(Exception.class)
-    public Result<?> globalExceptionHandler(Exception e, HttpServletRequest request) {
+    public Result<String> globalExceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
         // 如果是SSE请求，直接抛出，不返回JSON
         String contentType = request.getContentType();
         if (contentType != null && contentType.equals(MediaType.TEXT_EVENT_STREAM_VALUE)) {
-            return null;
+            try {
+                response.flushBuffer();
+            } catch (IOException ex) {
+                log.warn(MessageConstant.SSE_TIME_OUT);
+            }
+            return Result.error(ResponseMessageConstant.ERROR);
         }
         log.error(MessageConstant.SYSTEM_ERROR, e.getMessage());
         return Result.error(ResponseMessageConstant.ERROR);

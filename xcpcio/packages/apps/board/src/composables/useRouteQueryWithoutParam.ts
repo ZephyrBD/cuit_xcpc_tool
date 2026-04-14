@@ -1,8 +1,8 @@
-import type { MaybeRef, MaybeRefOrGetter, Ref } from "vue";
-import type { RouteParamValueRaw, Router } from "vue-router";
-import { tryOnScopeDispose } from "@vueuse/core";
-import { customRef, nextTick, toValue, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import type {MaybeRef, MaybeRefOrGetter, Ref} from "vue";
+import {customRef, nextTick, toValue, watch} from "vue";
+import type {RouteParamValueRaw, Router} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
+import {tryOnScopeDispose} from "@vueuse/core";
 
 const _queue = new WeakMap<Router, Map<string, any>>();
 

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { Contest, Submissions, Teams } from "@xcpcio/core";
-import type { Contest as IContest, Submissions as ISubmissions, Teams as ITeams, Lang } from "@xcpcio/types";
-import { BALLOON_TITLE_SUFFIX } from "@board/composables/constant";
-
-import { Balloon, createContest, createSubmissions, createTeams, Rank } from "@xcpcio/core";
+import type {Contest, Submissions, Teams} from "@xcpcio/core";
+import {Balloon, createContest, createSubmissions, createTeams, Rank} from "@xcpcio/core";
+import type {Contest as IContest, Lang, Submissions as ISubmissions, Teams as ITeams} from "@xcpcio/types";
+import {BALLOON_TITLE_SUFFIX} from "@board/composables/constant";
 
 const props = defineProps<{
   dataSourceUrl: string;

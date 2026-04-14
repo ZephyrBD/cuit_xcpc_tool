@@ -1,12 +1,12 @@
-import type { UserModule } from "./types";
-import { VueQueryPlugin } from "@tanstack/vue-query";
+import type {UserModule} from "./types";
+import {VueQueryPlugin} from "@tanstack/vue-query";
 
 import FloatingVue from "floating-vue";
 
-import { setupLayouts } from "virtual:generated-layouts";
-import { ViteSSG } from "vite-ssg";
-import { routes } from "vue-router/auto-routes";
-import { createWebHashHistory } from "vue-router";
+import {setupLayouts} from "virtual:generated-layouts";
+import {ViteSSG} from "vite-ssg";
+import {routes} from "vue-router/auto-routes";
+import {createWebHashHistory} from "vue-router";
 import App from "./App.vue";
 
 import "floating-vue/dist/style.css";

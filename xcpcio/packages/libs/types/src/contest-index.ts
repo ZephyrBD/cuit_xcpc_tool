@@ -1,4 +1,4 @@
-import type { Image, Text } from "./basic-types";
+import type {Image, Text} from "./basic-types";
 
 export interface ContestIndexConfig {
   contest_name: Text;

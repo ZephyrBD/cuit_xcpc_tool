@@ -1,5 +1,5 @@
-import { defineConfig } from "vitest/config";
-import { alias } from "../../../alias";
+import {defineConfig} from "vitest/config";
+import {alias} from "../../../alias";
 
 export default defineConfig({
   resolve: {

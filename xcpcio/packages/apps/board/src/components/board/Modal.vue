@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useModalStack } from "@board/composables/useModalStack";
-import { useMagicKeys } from "@vueuse/core";
+import {useModalStack} from "@board/composables/useModalStack";
+import {useMagicKeys} from "@vueuse/core";
 
 export type ModalCloseReason = "esc" | "outside" | "close-button";
 

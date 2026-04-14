@@ -16,25 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package top.techmczs.cuitxcpctool.properties;
+package top.techmczs.cuitxcpctool.common;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
-import top.techmczs.cuitxcpctool.common.RequiredConfig;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-@Component
-@ConfigurationProperties(prefix = "top.jwt")
-@Data
-public class JwtProperties {
-    public static final String ADMIN_ACCOUNT = "admin";
-    public static final Long ADMIN_TOKEN_TIME = 28800000L;
-
-    // 管理jwt令牌相关配置
-    @RequiredConfig
-    private String secretKey;
-    @RequiredConfig
-    private long ttl;
-    @RequiredConfig
-    private String adminPassword;
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RequiredConfig {
 }

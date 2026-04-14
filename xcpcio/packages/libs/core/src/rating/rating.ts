@@ -1,12 +1,12 @@
-import type { IRating } from "@xcpcio/types";
-import type { Ranks } from "../rank";
-import type { Team } from "../team";
-import type { RatingUserMap, RatingUsers } from "./rating-user";
+import type {IRating} from "@xcpcio/types";
+import type {Ranks} from "../rank";
+import type {Team} from "../team";
+import type {RatingUserMap, RatingUsers} from "./rating-user";
+import {RatingUser} from "./rating-user";
 
-import { I18nText } from "../basic-types";
-import { RatingCalculator } from "./rating-calculator";
-import { RatingHistory } from "./rating-history";
-import { RatingUser } from "./rating-user";
+import {I18nText} from "../basic-types";
+import {RatingCalculator} from "./rating-calculator";
+import {RatingHistory} from "./rating-history";
 
 export class Rating {
   id: string;

@@ -1,6 +1,6 @@
-import type { Image } from "@xcpcio/types";
+import type {Image} from "@xcpcio/types";
 
-import { normalizePath } from "./utils";
+import {normalizePath} from "./utils";
 
 export function getImageSource(image: Image, data_host?: string): string {
   if (image?.url) {

@@ -1,4 +1,4 @@
-import type { Text } from "./basic-types";
+import type {Text} from "./basic-types";
 
 export interface SeatMapSection {
   title?: Text;

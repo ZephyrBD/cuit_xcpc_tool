@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Balloon, Team } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
+import type {Balloon, Team} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
 const props = defineProps<{
   index: number;

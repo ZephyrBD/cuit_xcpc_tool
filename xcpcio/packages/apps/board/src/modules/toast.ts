@@ -1,4 +1,4 @@
-import type { UserModule } from "@board/types";
+import type {UserModule} from "@board/types";
 import ToastPlugin from "vue-toast-notification";
 
 import "vue-toast-notification/dist/theme-sugar.css";

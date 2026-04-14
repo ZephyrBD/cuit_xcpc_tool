@@ -1,5 +1,5 @@
 import chroma from "chroma-js";
-import { furthest } from "color-diff";
+import {furthest} from "color-diff";
 
 export function getWhiteOrBlackColorV1(background: string) {
   const [R, G, B] = chroma(background).rgb();

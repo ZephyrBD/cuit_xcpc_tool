@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Rank, Submission } from "@xcpcio/core";
-import { isAccepted, isRejected } from "@xcpcio/core";
+import type {Rank, Submission} from "@xcpcio/core";
+import {isAccepted, isRejected} from "@xcpcio/core";
 import "./SubmitHeatMap.less";
 
 const props = defineProps<{

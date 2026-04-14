@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { IRatingIndex } from "@xcpcio/types";
+import type {IRatingIndex} from "@xcpcio/types";
 
-import { useElementVisibility } from "@vueuse/core";
+import {useElementVisibility} from "@vueuse/core";
 
 const props = defineProps<{
   ratingIndex: IRatingIndex;

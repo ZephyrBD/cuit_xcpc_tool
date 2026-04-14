@@ -1,5 +1,5 @@
-import type { Image, Text } from "./basic-types";
-import type { Persons } from "./person";
+import type {Image, Text} from "./basic-types";
+import type {Persons} from "./person";
 
 export interface Team {
   id?: string;

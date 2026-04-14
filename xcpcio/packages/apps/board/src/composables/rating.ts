@@ -1,6 +1,6 @@
-import type { RatingUser } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
-import { RatingLevelToString, RatingUtility } from "@xcpcio/core";
+import type {RatingUser} from "@xcpcio/core";
+import {RatingLevelToString, RatingUtility} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
 interface RatingGraphData {
   x: number;

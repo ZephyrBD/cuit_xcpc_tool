@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Rank } from "@xcpcio/core";
+import type {Rank} from "@xcpcio/core";
 
-import { useModalStack } from "@board/composables/useModalStack";
+import {useModalStack} from "@board/composables/useModalStack";
 
 const props = defineProps<{
   isOpen: boolean;

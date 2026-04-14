@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import type { Item } from "@board/components/board/SecondLevelMenu.vue";
-import type { Contest, Submissions, Teams } from "@xcpcio/core";
-import type { Contest as IContest, Submissions as ISubmissions, Teams as ITeams, Lang } from "@xcpcio/types";
-
-import { createContest, createSubmissions, createTeams, getImageSource, getTimeDiff, Rank, RankOptions } from "@xcpcio/core";
-import { ContestState } from "@xcpcio/types";
+import type {Item} from "@board/components/board/SecondLevelMenu.vue";
+import type {Contest, Submissions, Teams} from "@xcpcio/core";
+import {
+  createContest,
+  createSubmissions,
+  createTeams,
+  getImageSource,
+  getTimeDiff,
+  Rank,
+  RankOptions
+} from "@xcpcio/core";
+import type {Contest as IContest, Lang, Submissions as ISubmissions, Teams as ITeams} from "@xcpcio/types";
+import {ContestState} from "@xcpcio/types";
 
 import _ from "lodash";
 

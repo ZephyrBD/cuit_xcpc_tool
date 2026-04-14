@@ -1,4 +1,4 @@
-import type { Problem, Submission, Team } from "@xcpcio/core";
+import type {Problem, Submission, Team} from "@xcpcio/core";
 
 export interface AnimatedSubmissionBlockItem {
   submission: Submission;

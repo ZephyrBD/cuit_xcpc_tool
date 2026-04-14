@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Rank } from "@xcpcio/core";
+import type {Rank} from "@xcpcio/core";
 
-import type { DropdownOptions } from "flowbite";
-import { Dropdown } from "flowbite";
-import { useToast } from "vue-toast-notification";
+import type {DropdownOptions} from "flowbite";
+import {Dropdown} from "flowbite";
+import {useToast} from "vue-toast-notification";
 
 const props = defineProps<{
   rank: Rank;

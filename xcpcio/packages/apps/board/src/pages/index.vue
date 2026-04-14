@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { ContestIndexList } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
+import type {ContestIndexList} from "@xcpcio/core";
+import {createContestIndexList} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
 import ContestIndexUI from "@board/components/ContestIndexUI.vue";
 import SearchInput from "@board/components/SearchInput.vue";
-import { TITLE_SUFFIX } from "@board/composables/constant";
+import {TITLE_SUFFIX} from "@board/composables/constant";
 
-import { useFetch } from "@vueuse/core";
-import { createContestIndexList } from "@xcpcio/core";
+import {useFetch} from "@vueuse/core";
 
 const { t, locale } = useI18n();
 const lang = computed(() => locale.value as unknown as Lang);

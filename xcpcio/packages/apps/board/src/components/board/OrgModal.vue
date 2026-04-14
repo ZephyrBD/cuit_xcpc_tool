@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Organization, Rank } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
+import type {Organization, Rank} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
 const props = defineProps<{
   isHidden: boolean;

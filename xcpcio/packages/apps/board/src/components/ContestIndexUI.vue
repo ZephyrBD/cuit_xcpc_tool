@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { ContestIndex } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
+import type {ContestIndex} from "@xcpcio/core";
+import {getImageSource} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
-import { getLogoFromPreset } from "@board/composables/logo";
-import { useElementVisibility } from "@vueuse/core";
-
-import { getImageSource } from "@xcpcio/core";
+import {getLogoFromPreset} from "@board/composables/logo";
+import {useElementVisibility} from "@vueuse/core";
 
 const props = defineProps<{
   data: ContestIndex;

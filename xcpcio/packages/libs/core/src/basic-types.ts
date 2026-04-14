@@ -1,4 +1,4 @@
-import type { I18NStringSet, Text as IText, Lang } from "@xcpcio/types";
+import type {I18NStringSet, Lang, Text as IText} from "@xcpcio/types";
 
 export interface SelectOptionItem {
   value: string;

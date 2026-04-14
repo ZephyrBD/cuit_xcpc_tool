@@ -21,40 +21,58 @@ package top.techmczs.cuitxcpctool.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import top.techmczs.cuitxcpctool.common.RequiredConfig;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Component
-@ConfigurationProperties(prefix = "org.domjudge")
+@ConfigurationProperties(prefix = "settings")
 @Data
-public class DomjudgeProperties {
+public class ToolProperties {
 
-    private String host;
-    private int port;
-    private String contestId;
-    private String nginxVerifyRoutePath;
-    private String routePath;
-    private String account;
-    private String password;
+    @RequiredConfig
+    private String domjudgeHost;
+    @RequiredConfig
+    private int domjudgePort;
+    @RequiredConfig
+    private String domjudgeContestId;
+    @RequiredConfig
+    private String domjudgePrintToken;
+    @RequiredConfig
+    private String domjudgeRoutePath;
+    @RequiredConfig
+    private String domjudgeAccount;
+    @RequiredConfig
+    private String domjudgePassword;
 
+    @RequiredConfig
     private boolean useSpecialClient;
+    @RequiredConfig
     private String specialClientUserAgent;
-    private String printToken;
+    @RequiredConfig
+    private String nginxVerifyRoutePath;
+
+    @RequiredConfig
+    private int unfreezeBoardTime;
+    @RequiredConfig
+    private boolean shouldForbiddenOnlinePrint;
+    @RequiredConfig
+    private String onlineLocationKey;
 
     public String getAuth(){
-        return account + ":" + password;
+        return domjudgeAccount + ":" + domjudgePassword;
     }
 
     public String getBaseUrl(){
-        return this.host + ":" + this.port + routePath;
+        return this.domjudgeHost + ":" + this.domjudgePort + domjudgeRoutePath;
     }
 
     public String getBasicAuth(){
         return "Basic " + Base64.getEncoder().encodeToString(this.getAuth().getBytes(StandardCharsets.UTF_8));
     }
     public String getVerifyUrl(){
-        return this.host + ":" + this.port + this.nginxVerifyRoutePath;
+        return this.domjudgeHost + ":" + this.domjudgePort + this.nginxVerifyRoutePath;
     }
 
 }

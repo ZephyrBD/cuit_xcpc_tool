@@ -1,4 +1,4 @@
-import { useRouteQueryWithoutParam } from "./useRouteQueryWithoutParam";
+import {useRouteQueryWithoutParam} from "./useRouteQueryWithoutParam";
 
 export function useQueryForSearch() {
   return useRouteQueryWithoutParam(

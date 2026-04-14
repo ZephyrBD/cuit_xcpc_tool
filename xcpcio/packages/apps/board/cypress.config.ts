@@ -1,4 +1,4 @@
-import { defineConfig } from "cypress";
+import {defineConfig} from "cypress";
 import vitePreprocessor from "cypress-vite";
 
 export default defineConfig({

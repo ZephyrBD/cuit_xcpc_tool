@@ -1,14 +1,13 @@
-import type { Submission as ISubmission, Submissions as ISubmissions, SubmissionReaction, TimeUnit } from "@xcpcio/types";
-import type { Contest } from "./contest";
-
-import { SubmissionStatus } from "@xcpcio/types";
+import type {Submission as ISubmission, SubmissionReaction, Submissions as ISubmissions, TimeUnit} from "@xcpcio/types";
+import {SubmissionStatus} from "@xcpcio/types";
+import type {Contest} from "./contest";
 
 import {
-  isAccepted,
-  isNotCalculatedPenaltyStatus,
-  isPending,
-  isRejected,
-  stringToSubmissionStatus,
+    isAccepted,
+    isNotCalculatedPenaltyStatus,
+    isPending,
+    isRejected,
+    stringToSubmissionStatus,
 } from "./submission-status";
 
 export class Submission {

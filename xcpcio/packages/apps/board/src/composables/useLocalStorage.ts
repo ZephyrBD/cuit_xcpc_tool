@@ -1,4 +1,4 @@
-import type { SelectOptionItem } from "@xcpcio/core";
+import type {SelectOptionItem} from "@xcpcio/core";
 
 export function getLocalStorageKeyForFilterOrganizations() {
   const route = useRoute();

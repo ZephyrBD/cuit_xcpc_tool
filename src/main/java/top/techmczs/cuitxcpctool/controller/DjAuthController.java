@@ -76,7 +76,7 @@ public class DjAuthController {
 
     /**
      * 请求校验UserAgent，校验成功后会返回一个token用于重定向到Nginx的验证模块进行转发到后端的业务
-     * 发送给Nginx的token以这样的形式给出 {org.domjudge.host}:{org.domjudge.port}{org.domjudge.nginx-verify-route-path}?token={token}
+     * 发送给Nginx的token以这样的形式给出 {org.domjudge.domjudgeHost}:{org.domjudge.domjudgeport}{org.domjudge.nginx-verify-route-path}?token={token}
      */
     @PostMapping("/public/auth/verify")
     @Operation(description = "请求验证客户端")
@@ -98,7 +98,7 @@ public class DjAuthController {
         }
     }
     /**
-     * Nginx请求校验token，格式为Nginx会请求本程序以类似后面的形式验证token: localhost:{port}/validate 其会在头文件中含有
+     * Nginx请求校验token，格式为Nginx会请求本程序以类似后面的形式验证token: localhost:{domjudgeport}/validate 其会在头文件中含有
      * X-Original-URI 头（{org.domjudge.nginx-verify-route-path}?token={token}），会以 = 分离提取{token}验证。
      */
     @GetMapping("/public/auth/validate")

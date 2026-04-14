@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Rank, RankOptions } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
-import type { ModalCloseReason } from "./Modal.vue";
+import type {Rank, RankOptions} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
+import type {ModalCloseReason} from "./Modal.vue";
 import _ from "lodash";
 
 const props = defineProps<{

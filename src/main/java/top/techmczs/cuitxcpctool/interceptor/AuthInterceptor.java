@@ -25,17 +25,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import top.techmczs.cuitxcpctool.properties.DomjudgeProperties;
+import top.techmczs.cuitxcpctool.properties.ToolProperties;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {
-    private final DomjudgeProperties domjudgeProperties;
+    private final ToolProperties toolProperties;
 
     @Override
     public boolean preHandle(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         String requestUri = request.getRequestURI();
-        return !requestUri.contains("/cxtool/auth") || domjudgeProperties.isUseSpecialClient();
+        return !requestUri.contains("/cxtool/auth") || toolProperties.isUseSpecialClient();
     }
 }

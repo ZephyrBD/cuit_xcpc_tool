@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Image } from "@xcpcio/types";
-import { getImageSource } from "@xcpcio/core";
+import type {Image} from "@xcpcio/types";
+import {getImageSource} from "@xcpcio/core";
 
 const props = defineProps<{
   image: Image;

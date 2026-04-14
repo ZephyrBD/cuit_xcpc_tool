@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.yaml.snakeyaml.Yaml;
 import top.techmczs.cuitxcpctool.entity.domjudge.*;
-import top.techmczs.cuitxcpctool.properties.DomjudgeProperties;
+import top.techmczs.cuitxcpctool.properties.ToolProperties;
 import top.techmczs.cuitxcpctool.services.DomjudgeFetchService;
 
 import java.util.List;
@@ -41,16 +41,16 @@ public class DomjudgeFetchServiceImpl implements DomjudgeFetchService {
 
     private final RestTemplate restTemplate;
 
-    private final DomjudgeProperties domjudgeProperties;
+    private final ToolProperties toolProperties;
 
     private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.AUTHORIZATION, domjudgeProperties.getBasicAuth());
+        headers.set(HttpHeaders.AUTHORIZATION, toolProperties.getBasicAuth());
         return headers;
     }
 
     private String getUrl(String path) {
-        return domjudgeProperties.getBaseUrl() + "/api/v4/contests/" + domjudgeProperties.getContestId() + path;
+        return toolProperties.getBaseUrl() + "/api/v4/contests/" + toolProperties.getDomjudgeContestId() + path;
     }
 
     @Override

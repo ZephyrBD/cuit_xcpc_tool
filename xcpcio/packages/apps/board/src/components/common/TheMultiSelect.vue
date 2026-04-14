@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { SelectOptionItem } from "@xcpcio/core";
-import { MultiSelect } from "vue-search-select";
+import type {SelectOptionItem} from "@xcpcio/core";
+import {MultiSelect} from "vue-search-select";
 
 interface Props {
   options: SelectOptionItem[];

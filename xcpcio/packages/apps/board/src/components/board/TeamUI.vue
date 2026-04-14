@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Rank, Team } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
-import { GiantsType, MedalType } from "@xcpcio/core";
+import type {Rank, Team} from "@xcpcio/core";
+import {GiantsType, MedalType} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
 const props = defineProps<{
   ix: number;

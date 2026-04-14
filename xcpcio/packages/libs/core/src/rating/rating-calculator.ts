@@ -1,5 +1,5 @@
-import type { RatingUsers } from "./rating-user";
-import { RatingUser } from "./rating-user";
+import type {RatingUsers} from "./rating-user";
+import {RatingUser} from "./rating-user";
 
 // https://www.wikiwand.com/en/Elo_rating_system
 export class RatingCalculator {

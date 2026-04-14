@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { Rank } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
-import { CodeforcesGymGhostDATConverter, GeneralExcelConverter, ICPCStandingsCsvConverter } from "@xcpcio/core";
+import type {Rank} from "@xcpcio/core";
+import {CodeforcesGymGhostDATConverter, GeneralExcelConverter, ICPCStandingsCsvConverter} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
 import FileSaver from "file-saver";
 import sleep from "sleep-promise";
 
-import { ModelSelect } from "vue-search-select";
-import { useToast } from "vue-toast-notification";
+import {ModelSelect} from "vue-search-select";
+import {useToast} from "vue-toast-notification";
 
 const props = defineProps<{
   rank: Rank;

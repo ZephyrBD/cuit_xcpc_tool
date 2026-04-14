@@ -1,12 +1,8 @@
-import type { Rank } from "../rank";
+import type {Rank} from "../rank";
 
-import { SubmissionStatus } from "@xcpcio/types";
+import {SubmissionStatus} from "@xcpcio/types";
 
-import {
-  isAccepted,
-  isNotCalculatedPenaltyStatus,
-  isPending,
-} from "../submission-status";
+import {isAccepted, isNotCalculatedPenaltyStatus, isPending,} from "../submission-status";
 
 import dayjs from "../utils/dayjs";
 

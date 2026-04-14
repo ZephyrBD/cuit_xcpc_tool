@@ -22,13 +22,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.SseEventConstant;
 import top.techmczs.cuitxcpctool.dto.BalloonTaskDTO;
 import top.techmczs.cuitxcpctool.entity.domjudge.DjBalloon;
+import top.techmczs.cuitxcpctool.properties.ToolProperties;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjBalloonService;
 import top.techmczs.cuitxcpctool.services.DomjudgeFetchService;
@@ -49,8 +49,9 @@ public class DjBalloonServiceImpl implements DjBalloonService {
     // 待推送气球队列
     private final List<DjBalloon> NEW_BALLOONS = new CopyOnWriteArrayList<>();
     private final Map<String, Long> FIRST_SOLVE = Collections.synchronizedMap(new HashMap<>());
-    @Autowired
-    private DomjudgeFetchService domjudgeFetchService;
+
+    private final DomjudgeFetchService domjudgeFetchService;
+    private final ToolProperties toolProperties;
 
     @Scheduled(fixedRate = 500)
     public void pushBalloonToClients() {
@@ -95,7 +96,13 @@ public class DjBalloonServiceImpl implements DjBalloonService {
         try {
             List<DjBalloon> dtoList = domjudgeFetchService.getBalloons(isTodo);
             if (isTodo && dtoList != null && !dtoList.isEmpty()) {
-                NEW_BALLOONS.addAll(dtoList);
+                for (DjBalloon dto : dtoList) {
+                    if(toolProperties.isShouldForbiddenOnlinePrint() && dto.getLocation().equals(toolProperties.getOnlineLocationKey())){
+                        setBalloonDone(dto.getBalloonId());
+                        continue;
+                    }
+                    NEW_BALLOONS.add(dto);
+                }
             }
 
             return dtoList;

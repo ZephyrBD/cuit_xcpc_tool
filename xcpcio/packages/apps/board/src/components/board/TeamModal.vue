@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Rank, Team } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
+import type {Rank, Team} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
-import { Chart } from "highcharts-vue";
+import {Chart} from "highcharts-vue";
 
 const props = defineProps<{
   isHidden: boolean;

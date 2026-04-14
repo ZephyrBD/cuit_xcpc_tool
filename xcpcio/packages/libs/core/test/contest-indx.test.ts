@@ -1,8 +1,8 @@
 import fs from "node:fs";
-import { resolve } from "node:path";
-import { createContestIndexList } from "@xcpcio/core";
+import {resolve} from "node:path";
+import {createContestIndexList} from "@xcpcio/core";
 
-import { describe, expect, it } from "vitest";
+import {describe, expect, it} from "vitest";
 
 describe("contest-index", () => {
   it("common", () => {

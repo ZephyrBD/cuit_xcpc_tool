@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { availableLocales, loadLanguageAsync } from "@board/modules/i18n";
+import {availableLocales, loadLanguageAsync} from "@board/modules/i18n";
 
 const props = defineProps<{
   width?: string;

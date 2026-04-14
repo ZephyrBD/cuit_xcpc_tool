@@ -1,8 +1,8 @@
-import type { Image, Organization as IOrganization, Organizations as IOrganizations } from "@xcpcio/types";
+import type {Image, Organization as IOrganization, Organizations as IOrganizations} from "@xcpcio/types";
 
-import type { Teams } from "./team";
+import type {Teams} from "./team";
 
-import { I18nText } from "./basic-types";
+import {I18nText} from "./basic-types";
 
 export class Organization {
   id: string;

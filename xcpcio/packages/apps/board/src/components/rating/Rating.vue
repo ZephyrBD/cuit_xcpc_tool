@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Lang } from "@xcpcio/types";
-import { useFetch } from "@vueuse/core";
-import { Rating } from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
+import {useFetch} from "@vueuse/core";
+import {Rating} from "@xcpcio/core";
 
 const props = defineProps<{
   id: string;

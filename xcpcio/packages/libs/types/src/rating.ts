@@ -1,5 +1,5 @@
-import type { Text } from "./basic-types";
-import type { Persons } from "./person";
+import type {Text} from "./basic-types";
+import type {Persons} from "./person";
 
 export interface IRatingIndex {
   id: string;

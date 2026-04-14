@@ -1,10 +1,10 @@
-import type { IRatingHistory } from "@xcpcio/types";
-import type { Persons } from "../person";
-import type { dayjs } from "../utils";
+import type {IRatingHistory} from "@xcpcio/types";
+import type {Persons} from "../person";
+import {createPersons} from "../person";
+import type {dayjs} from "../utils";
+import {createDayJS} from "../utils";
 
-import { I18nText } from "../basic-types";
-import { createPersons } from "../person";
-import { createDayJS } from "../utils";
+import {I18nText} from "../basic-types";
 
 export class RatingHistory {
   rank: number;

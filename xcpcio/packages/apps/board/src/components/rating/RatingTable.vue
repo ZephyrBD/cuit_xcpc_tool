@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Rating, SelectOptionItem } from "@xcpcio/core";
+import type {Rating, SelectOptionItem} from "@xcpcio/core";
 
-import { Pagination } from "@board/composables/pagination";
+import {Pagination} from "@board/composables/pagination";
 
 interface FilterOptions {
   organizations: string[];

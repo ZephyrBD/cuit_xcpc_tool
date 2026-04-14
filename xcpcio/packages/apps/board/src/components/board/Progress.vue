@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Rank, RankOptions } from "@xcpcio/core";
-import { createDayJS, getTimeDiff } from "@xcpcio/core";
-import { ContestState } from "@xcpcio/types";
+import type {Rank, RankOptions} from "@xcpcio/core";
+import {createDayJS, getTimeDiff} from "@xcpcio/core";
+import {ContestState} from "@xcpcio/types";
 
 const props = defineProps<{
   width: number;

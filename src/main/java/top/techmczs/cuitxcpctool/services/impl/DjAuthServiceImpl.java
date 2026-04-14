@@ -42,10 +42,10 @@ import top.techmczs.cuitxcpctool.exception.IllegalClientException;
 import top.techmczs.cuitxcpctool.exception.IllegalTokenException;
 import top.techmczs.cuitxcpctool.exception.TeamNotExistException;
 import top.techmczs.cuitxcpctool.mapper.AuthTaskMapper;
-import top.techmczs.cuitxcpctool.mapper.TeamMapper;
 import top.techmczs.cuitxcpctool.mapper.TeamClientMapper;
-import top.techmczs.cuitxcpctool.properties.DomjudgeProperties;
+import top.techmczs.cuitxcpctool.mapper.TeamMapper;
 import top.techmczs.cuitxcpctool.properties.JwtProperties;
+import top.techmczs.cuitxcpctool.properties.ToolProperties;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjAuthService;
 import top.techmczs.cuitxcpctool.services.SseManagerService;
@@ -65,7 +65,7 @@ public class DjAuthServiceImpl implements DjAuthService {
     private final SseManagerService sseManagerService;
 
     // 原有依赖不变
-    private final DomjudgeProperties domjudgeProperties;
+    private final ToolProperties toolProperties;
     private final JwtProperties jwtProperties;
     private final SqlQueue<AuthTask> authTaskQueue;
     private final TeamMapper teamMapper;
@@ -171,7 +171,7 @@ public class DjAuthServiceImpl implements DjAuthService {
         DjTeamDTO djTeamDTO = new DjTeamDTO().setToken(verifyAndGetToken(userAgent,examNum));
         saveClientIdToTeamClient(examNum,clientId);
         BeanUtils.copyProperties(team,djTeamDTO);
-        String url = domjudgeProperties.getVerifyUrl();
+        String url = toolProperties.getVerifyUrl();
         djTeamDTO.setDjUrl(url).setLoginTime(LocalDateTime.now());
         return djTeamDTO;
     }
@@ -185,7 +185,7 @@ public class DjAuthServiceImpl implements DjAuthService {
         DjTeamDTO djTeamDTO = new DjTeamDTO();
         BeanUtils.copyProperties(team, djTeamDTO);
         String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), jwtProperties.getTtl(),examNum);
-        String url = domjudgeProperties.getVerifyUrl();
+        String url = toolProperties.getVerifyUrl();
         djTeamDTO.setToken(token).setDjUrl(url).setLoginTime(LocalDateTime.now());
         return djTeamDTO;
     }
@@ -229,7 +229,7 @@ public class DjAuthServiceImpl implements DjAuthService {
     @Override
     public AdminDTO getAdminToDomjudgeToken() {
         return new AdminDTO()
-                .setUrl(domjudgeProperties.getVerifyUrl())
+                .setUrl(toolProperties.getVerifyUrl())
                 .setToken(JwtUtil.createJWT(jwtProperties.getSecretKey(), jwtProperties.getTtl(),"admin"));
     }
 
@@ -318,7 +318,7 @@ public class DjAuthServiceImpl implements DjAuthService {
     }
 
     private String verifyAndGetToken(String userAgent,String examNum) {
-        String specialUA = domjudgeProperties.getSpecialClientUserAgent();
+        String specialUA = toolProperties.getSpecialClientUserAgent();
         if (userAgent == null || !userAgent.contains(specialUA)) {
             throw new IllegalClientException(MessageConstant.ILLEGAL_CLIENT);
         }

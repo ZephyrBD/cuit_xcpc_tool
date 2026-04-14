@@ -38,6 +38,7 @@ public class MessageConstant {
 
     public static final String TEAM_NEED_PRINT = "{} need print code!";
     public static final String TEAM_NEED_LOGIN = "{} need login!";
+    public static final String FORBIDDEN_PRINT = "{} forbidden print code!";
 
     public static final String SSE_LINK_SUCCESS = "SSE link success!";
     public static final String SEE_CLOSE = "SSE connection closed. Remaining clients: {}";

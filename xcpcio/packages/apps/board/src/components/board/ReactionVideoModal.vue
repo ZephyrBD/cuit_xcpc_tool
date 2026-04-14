@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SubmissionReaction } from "@xcpcio/types";
+import type {SubmissionReaction} from "@xcpcio/types";
 
 const props = defineProps<{
   isOpen: boolean;

@@ -1,5 +1,5 @@
-import type { Submission, Team } from "@xcpcio/core";
-import { MedalType } from "@xcpcio/core";
+import type {Submission, Team} from "@xcpcio/core";
+import {MedalType} from "@xcpcio/core";
 
 export function getMedalColor(team: Team): { backgroundColor: string; color: string } | undefined {
   const color = {

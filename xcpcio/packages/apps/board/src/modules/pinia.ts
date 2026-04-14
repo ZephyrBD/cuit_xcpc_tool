@@ -1,5 +1,5 @@
-import type { UserModule } from "@board/types";
-import { createPinia } from "pinia";
+import type {UserModule} from "@board/types";
+import {createPinia} from "pinia";
 
 // Setup Pinia
 // https://pinia.vuejs.org/

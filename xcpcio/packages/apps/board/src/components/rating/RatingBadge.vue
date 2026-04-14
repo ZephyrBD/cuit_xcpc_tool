@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RatingLevelToString, RatingUtility } from "@xcpcio/core";
+import {RatingLevelToString, RatingUtility} from "@xcpcio/core";
 
 import "./rating.less";
 

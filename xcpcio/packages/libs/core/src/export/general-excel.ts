@@ -1,11 +1,11 @@
-import type { Lang } from "@xcpcio/types";
+import type {Lang} from "@xcpcio/types";
 
-import type { Rank } from "../rank";
+import type {Rank} from "../rank";
 import _ from "lodash";
 import stringWidth from "string-width";
 import * as XLSX from "xlsx-js-style";
 
-import { isValidMedalType } from "../award";
+import {isValidMedalType} from "../award";
 
 enum SpecialCellType {
   FIRST_SOLVED = "firstSolved",

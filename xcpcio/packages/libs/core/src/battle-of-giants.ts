@@ -1,7 +1,7 @@
-import type { SelectOptionItem } from "./basic-types";
-import type { Team } from "./team";
+import type {SelectOptionItem} from "./basic-types";
+import type {Team} from "./team";
 
-import { Base64 } from "js-base64";
+import {Base64} from "js-base64";
 
 export enum GiantsType {
   BLUE,

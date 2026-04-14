@@ -25,8 +25,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import top.techmczs.cuitxcpctool.properties.DomjudgeProperties;
 import top.techmczs.cuitxcpctool.properties.JwtProperties;
+import top.techmczs.cuitxcpctool.properties.ToolProperties;
 import top.techmczs.cuitxcpctool.utils.JwtUtil;
 
 /**
@@ -46,12 +46,12 @@ public class LoginInterceptor implements HandlerInterceptor {
     private static final String SWAGGER_RESOURCES = "/cxtool/swagger-resources";
 
     // 注入你的配置
-    private final DomjudgeProperties domjudgeProperties;
+    private final ToolProperties toolProperties;
     private final JwtProperties jwtProperties;
 
     // 构造器注入
-    public LoginInterceptor(DomjudgeProperties domjudgeProperties, JwtProperties jwtProperties) {
-        this.domjudgeProperties = domjudgeProperties;
+    public LoginInterceptor(ToolProperties toolProperties, JwtProperties jwtProperties) {
+        this.toolProperties = toolProperties;
         this.jwtProperties = jwtProperties;
     }
 
@@ -92,7 +92,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (PRINT_TASK_URI.equals(requestUri) && HttpMethod.POST.matches(method)) {
             String token = request.getHeader("token");
             // 先判空再比较
-            return token != null && token.equals(domjudgeProperties.getPrintToken());
+            return token != null && token.equals(toolProperties.getDomjudgePrintToken());
         }
 
         // 拦截所有管理员接口，校验JWT

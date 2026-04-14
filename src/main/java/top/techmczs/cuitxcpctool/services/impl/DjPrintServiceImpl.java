@@ -32,13 +32,14 @@ import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.SseEventConstant;
 import top.techmczs.cuitxcpctool.dto.PrintTaskDTO;
 import top.techmczs.cuitxcpctool.dto.PrintTeamDTO;
-import top.techmczs.cuitxcpctool.entity.Team;
 import top.techmczs.cuitxcpctool.entity.PrintTask;
+import top.techmczs.cuitxcpctool.entity.Team;
 import top.techmczs.cuitxcpctool.exception.GetFileErrorException;
 import top.techmczs.cuitxcpctool.exception.QueueTaskException;
 import top.techmczs.cuitxcpctool.exception.TeamNotExistException;
-import top.techmczs.cuitxcpctool.mapper.TeamMapper;
 import top.techmczs.cuitxcpctool.mapper.PrintTaskMapper;
+import top.techmczs.cuitxcpctool.mapper.TeamMapper;
+import top.techmczs.cuitxcpctool.properties.ToolProperties;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjPrintService;
 import top.techmczs.cuitxcpctool.services.SseManagerService;
@@ -60,10 +61,18 @@ public class DjPrintServiceImpl implements DjPrintService {
     private final SqlQueue<PrintTask> printTaskQueue;
     private final PrintTaskMapper printTaskMapper;
     private final TeamMapper teamMapper;
+    private final ToolProperties toolProperties;
 
     @Override
     public void addPrintTask(MultipartFile file, PrintTeamDTO printTeamDTO) {
         try {
+            //禁止线上打印
+            if(toolProperties.isShouldForbiddenOnlinePrint()){
+                if(teamMapper.selectById(printTeamDTO.getExamNum()).getPosition().equals(toolProperties.getOnlineLocationKey())){
+                    log.info(MessageConstant.FORBIDDEN_PRINT, printTeamDTO.getExamNum());
+                    return;
+                }
+            }
             // 入库
             PrintTask task = enqueue(file, printTeamDTO);
             log.info(MessageConstant.TEAM_NEED_PRINT,printTeamDTO.getExamNum());

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { I18nText } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
+import type {I18nText} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
 export interface Item {
   title: string | I18nText;

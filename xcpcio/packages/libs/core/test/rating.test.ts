@@ -1,10 +1,19 @@
 import fs from "node:fs";
-import { resolve } from "node:path";
-import { createContest, createSubmissions, createTeams, I18nText, Rank, Rating, RatingCalculator, RatingUser } from "@xcpcio/core";
+import {resolve} from "node:path";
+import {
+    createContest,
+    createSubmissions,
+    createTeams,
+    I18nText,
+    Rank,
+    Rating,
+    RatingCalculator,
+    RatingUser
+} from "@xcpcio/core";
 
 import _ from "lodash";
 
-import { describe, expect, it } from "vitest";
+import {describe, expect, it} from "vitest";
 
 describe("contest", () => {
   it("2023_ccpc_final", () => {

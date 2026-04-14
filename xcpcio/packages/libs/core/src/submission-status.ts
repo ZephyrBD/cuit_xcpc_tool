@@ -1,4 +1,4 @@
-import { SubmissionStatus } from "@xcpcio/types";
+import {SubmissionStatus} from "@xcpcio/types";
 
 export function stringToSubmissionStatus(status: string): SubmissionStatus {
   status = status.toUpperCase().replace(" ", "_");

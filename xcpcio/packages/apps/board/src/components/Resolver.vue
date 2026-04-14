@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Contest, Submissions, Teams } from "@xcpcio/core";
-import type { Contest as IContest, Submissions as ISubmissions, Teams as ITeams, Lang } from "@xcpcio/types";
-import { onKeyUp } from "@vueuse/core";
-import { createContest, createSubmissions, createTeams, ResolverVue } from "@xcpcio/core";
-import { gsap } from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import type {Contest, Submissions, Teams} from "@xcpcio/core";
+import {createContest, createSubmissions, createTeams, ResolverVue} from "@xcpcio/core";
+import type {Contest as IContest, Lang, Submissions as ISubmissions, Teams as ITeams} from "@xcpcio/types";
+import {onKeyUp} from "@vueuse/core";
+import {gsap} from "gsap";
+import {ScrollToPlugin} from "gsap/ScrollToPlugin";
 
 const props = defineProps<{
   dataSourceUrl: string;

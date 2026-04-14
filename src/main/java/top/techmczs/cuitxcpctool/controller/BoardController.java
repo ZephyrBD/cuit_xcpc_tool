@@ -18,6 +18,8 @@
 
 package top.techmczs.cuitxcpctool.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,30 +37,35 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/public/board/data")
+@Tag(name = "Board", description = "处理返回给XCPCIO Board的信息接口")
 public class BoardController {
 
     private final BoardConvertService boardConvertService;
 
-    // 1. 返回 contest_list.json
+    // 返回 contest_list.json
     @GetMapping("/index/contest_list.json")
+    @Operation(description = "返回Board比赛列表，这里只会返回{cid}这场比赛")
     public BoardContestListDTO contestList() {
         return boardConvertService.buildContestList();
     }
 
-    // 2. 返回 config.json
+    // 返回 config.json
     @GetMapping("/icpc/{year}/{cid}/config.json")
+    @Operation(description = "返回Board比赛配置")
     public BoardContestConfigDTO config() {
         return boardConvertService.buildConfig();
     }
 
-    // 3. 返回 team.json
+    // 返回 team.json
     @GetMapping("/icpc/{year}/{cid}/team.json")
+    @Operation(description = "返回Board队伍信息")
     public List<BoardTeamDTO> team() {
         return boardConvertService.buildTeams();
     }
 
-    // 4. 返回 run.json
+    // 返回 run.json
     @GetMapping("/icpc/{year}/{cid}/run.json")
+    @Operation(description = "返回Board需要的提交列表")
     public List<BoardRunDTO> run() {
         return boardConvertService.buildRuns();
     }

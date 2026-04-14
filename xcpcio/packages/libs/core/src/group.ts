@@ -1,4 +1,4 @@
-import { I18nText } from "./basic-types";
+import {I18nText} from "./basic-types";
 
 export class Group {
   name: I18nText;

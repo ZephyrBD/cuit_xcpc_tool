@@ -1,6 +1,6 @@
-import { Problem } from "./problem";
-import { Submission } from "./submission";
-import { Team } from "./team";
+import {Problem} from "./problem";
+import {Submission} from "./submission";
+import {Team} from "./team";
 
 export class Balloon {
   problem: Problem;

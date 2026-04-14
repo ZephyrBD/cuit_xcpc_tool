@@ -1,4 +1,4 @@
-import type { Image } from "@xcpcio/types";
+import type {Image} from "@xcpcio/types";
 import icpc_logo from "@board/assets/icpc.png";
 
 export function GET_LOGO_ICPC(): Image {

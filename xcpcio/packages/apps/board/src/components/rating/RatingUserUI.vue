@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { RatingUser } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
-import { RatingUtility } from "@xcpcio/core";
+import type {RatingUser} from "@xcpcio/core";
+import {RatingUtility} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
 import "./rating.less";
 

@@ -1,18 +1,26 @@
-import type { BannerMode, Contest as IContest, Image, Organizations as IOrganizations, SeatMap as ISeatMap, MedalPreset, SocialMedia, StatusTimeDisplay } from "@xcpcio/types";
-import type { Awards } from "./award";
-import type { Organizations } from "./organization";
-import type { Problem, Problems } from "./problem";
-import type { SeatMap } from "./seat-map";
-
-import { ContestState } from "@xcpcio/types";
-import { Award, MedalType } from "./award";
-import { I18nText } from "./basic-types";
-import { ContestOptions, createContestOptions } from "./contest-options";
-import { Group } from "./group";
-import { createOrganizations } from "./organization";
-import { createProblems, createProblemsByProblemIds } from "./problem";
-import { createSeatMap } from "./seat-map";
-import { createDayJS, dayjs, getTimeDiff } from "./utils";
+import type {
+    BannerMode,
+    Contest as IContest,
+    Image,
+    MedalPreset,
+    Organizations as IOrganizations,
+    SeatMap as ISeatMap,
+    SocialMedia,
+    StatusTimeDisplay
+} from "@xcpcio/types";
+import {ContestState} from "@xcpcio/types";
+import type {Awards} from "./award";
+import {Award, MedalType} from "./award";
+import type {Organizations} from "./organization";
+import {createOrganizations} from "./organization";
+import type {Problem, Problems} from "./problem";
+import {createProblems, createProblemsByProblemIds} from "./problem";
+import type {SeatMap} from "./seat-map";
+import {createSeatMap} from "./seat-map";
+import {I18nText} from "./basic-types";
+import {ContestOptions, createContestOptions} from "./contest-options";
+import {Group} from "./group";
+import {createDayJS, dayjs, getTimeDiff} from "./utils";
 
 export class Contest {
   id: string = "";

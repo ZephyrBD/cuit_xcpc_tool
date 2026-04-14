@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TooltipInterface, TooltipOptions } from "flowbite";
-import { Tooltip } from "flowbite";
+import type {TooltipInterface, TooltipOptions} from "flowbite";
+import {Tooltip} from "flowbite";
 import "./Tooltip.css";
 
 const props = defineProps<{

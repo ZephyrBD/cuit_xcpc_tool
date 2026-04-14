@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Rank, SelectOptionItem, Submissions } from "@xcpcio/core";
-import type { Lang, SubmissionReaction, SubmissionStatus } from "@xcpcio/types";
+import type {Rank, SelectOptionItem, Submissions} from "@xcpcio/core";
+import {Submission} from "@xcpcio/core";
+import type {Lang, SubmissionReaction, SubmissionStatus} from "@xcpcio/types";
+import {SubmissionStatusToString} from "@xcpcio/types";
 
-import { Pagination } from "@board/composables/pagination";
-import { Submission } from "@xcpcio/core";
-import { SubmissionStatusToString } from "@xcpcio/types";
+import {Pagination} from "@board/composables/pagination";
 
 import "@board/styles/submission-status-filter.css";
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { RatingUser } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
+import type {RatingUser} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
 
-import { Chart } from "highcharts-vue";
+import {Chart} from "highcharts-vue";
 
 import "./rating.less";
 

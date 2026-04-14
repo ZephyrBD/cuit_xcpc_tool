@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BattleOfGiants } from "@xcpcio/core";
+import type {BattleOfGiants} from "@xcpcio/core";
 
 const props = defineProps<{
   battleOfGiants: BattleOfGiants;

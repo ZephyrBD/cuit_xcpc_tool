@@ -1,11 +1,11 @@
-import type { Rank } from "../rank";
-import type { Team } from "../team";
+import type {Rank} from "../rank";
+import type {Team} from "../team";
 
 import _ from "lodash";
 import ordinal from "ordinal";
 import Papa from "papaparse";
 
-import { isValidMedalType } from "../award";
+import {isValidMedalType} from "../award";
 
 interface ICPCTeamResult {
   teamId: string;

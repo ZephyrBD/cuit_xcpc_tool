@@ -1,10 +1,10 @@
-import type { IRatingUser } from "@xcpcio/types";
+import type {IRatingUser} from "@xcpcio/types";
 
-import type { Persons } from "../person";
-import type { RatingHistories } from "./rating-history";
-import { I18nText } from "../basic-types";
-import { Person } from "../person";
-import { RatingHistory } from "./rating-history";
+import type {Persons} from "../person";
+import {Person} from "../person";
+import type {RatingHistories} from "./rating-history";
+import {RatingHistory} from "./rating-history";
+import {I18nText} from "../basic-types";
 
 export class RatingUser {
   id: string;

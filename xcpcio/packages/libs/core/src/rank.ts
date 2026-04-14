@@ -1,22 +1,22 @@
-import type { SubmissionStatus } from "@xcpcio/types";
-import type { Balloons } from "./balloon";
-import type { SelectOptionItem } from "./basic-types";
-import type { Contest } from "./contest";
-import type { Organizations } from "./organization";
-import type { Submissions } from "./submission";
+import type {SubmissionStatus} from "@xcpcio/types";
+import type {Balloons} from "./balloon";
+import {Balloon} from "./balloon";
+import type {SelectOptionItem} from "./basic-types";
+import {I18nText} from "./basic-types";
+import type {Contest} from "./contest";
+import type {Organizations} from "./organization";
+import {Organization} from "./organization";
+import type {Submissions} from "./submission";
+import {Submission} from "./submission";
 
-import type { Teams } from "./team";
+import type {Teams} from "./team";
+import {Team} from "./team";
 
 import _ from "lodash";
-import { Award, MedalType } from "./award";
-import { Balloon } from "./balloon";
-import { I18nText } from "./basic-types";
-import { BattleOfGiants } from "./battle-of-giants";
-import { Organization } from "./organization";
-import { TeamProblemStatistics } from "./problem";
-import { RankStatistics } from "./rank-statistics";
-import { Submission } from "./submission";
-import { Team } from "./team";
+import {Award, MedalType} from "./award";
+import {BattleOfGiants} from "./battle-of-giants";
+import {TeamProblemStatistics} from "./problem";
+import {RankStatistics} from "./rank-statistics";
 
 export class RankOptions {
   enableFilterSubmissionsByTimestamp: boolean;

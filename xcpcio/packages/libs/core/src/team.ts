@@ -1,16 +1,16 @@
-import type { Image, Team as ITeam, Teams as ITeams, Lang } from "@xcpcio/types";
+import type {Image, Lang, Team as ITeam, Teams as ITeams} from "@xcpcio/types";
 
-import type { Award, MedalType } from "./award";
-import type { ContestOptions } from "./contest-options";
-import type { Organization } from "./organization";
-import type { Persons } from "./person";
-import type { Problem, TeamProblemStatistics } from "./problem";
+import type {Award, MedalType} from "./award";
+import type {ContestOptions} from "./contest-options";
+import type {Organization} from "./organization";
+import type {Persons} from "./person";
+import {createPersons} from "./person";
+import type {Problem, TeamProblemStatistics} from "./problem";
 
-import type { Submissions } from "./submission";
+import type {Submissions} from "./submission";
 import _ from "lodash";
-import { I18nText } from "./basic-types";
-import { createPersons } from "./person";
-import { calcDirt } from "./utils";
+import {I18nText} from "./basic-types";
+import {calcDirt} from "./utils";
 
 export class PlaceChartPointData {
   timePoint: number;

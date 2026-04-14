@@ -1,4 +1,4 @@
-import type { SubmissionStatus } from "./submission-status";
+import type {SubmissionStatus} from "./submission-status";
 
 export interface SubmissionReaction {
   url: string;

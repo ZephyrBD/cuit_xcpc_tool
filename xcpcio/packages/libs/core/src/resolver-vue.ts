@@ -1,9 +1,9 @@
-import type { Contest } from "./contest";
-import type { Submissions } from "./submission";
-import type { Teams } from "./team";
+import type {Contest} from "./contest";
+import type {Submissions} from "./submission";
+import type {Teams} from "./team";
+import {Team} from "./team";
 
-import { Resolver } from "./resolver";
-import { Team } from "./team";
+import {Resolver} from "./resolver";
 
 export class ResolverVue extends Resolver {
   readonly FLASHING_TIME_MS = 100;

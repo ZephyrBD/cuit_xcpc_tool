@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type Hls from "hls.js";
 
-import { useHlsPlayer } from "@board/composables/useHlsPlayer";
+import {useHlsPlayer} from "@board/composables/useHlsPlayer";
 
 const props = defineProps<{
   webcamUrl: string | null;

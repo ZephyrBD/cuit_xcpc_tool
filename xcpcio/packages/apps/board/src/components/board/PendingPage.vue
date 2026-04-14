@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { Rank, SelectOptionItem } from "@xcpcio/core";
-import type { Lang } from "@xcpcio/types";
-import type { SegmentedControlOption } from "../common/SegmentedControl.vue";
+import type {Rank, SelectOptionItem} from "@xcpcio/core";
+import type {Lang} from "@xcpcio/types";
+import type {SegmentedControlOption} from "../common/SegmentedControl.vue";
 
 const props = defineProps<{
   rank: Rank;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ProblemStatistics, Rank } from "@xcpcio/core";
+import type {ProblemStatistics, Rank} from "@xcpcio/core";
 
 const props = defineProps<{
   rank: Rank;

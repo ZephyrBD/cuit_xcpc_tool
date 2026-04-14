@@ -1,9 +1,9 @@
 import fs from "node:fs";
-import { resolve } from "node:path";
-import { CodeforcesGymGhostDATConverter, createContest, createSubmissions, createTeams, Rank } from "@xcpcio/core";
+import {resolve} from "node:path";
+import {CodeforcesGymGhostDATConverter, createContest, createSubmissions, createTeams, Rank} from "@xcpcio/core";
 
 import _ from "lodash";
-import { describe, expect, it } from "vitest";
+import {describe, expect, it} from "vitest";
 
 describe("contest", () => {
   it("2023_ccpc_final", () => {

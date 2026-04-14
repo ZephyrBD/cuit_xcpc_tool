@@ -1,5 +1,5 @@
-import { TeamProblemStatistics } from "./problem";
-import { Team } from "./team";
+import {TeamProblemStatistics} from "./problem";
+import {Team} from "./team";
 
 export class ResolverOperation {
   id: number;

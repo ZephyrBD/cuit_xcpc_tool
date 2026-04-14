@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ContestState } from "@xcpcio/types";
+import {ContestState} from "@xcpcio/types";
 
 const props = defineProps<{
   state: ContestState;

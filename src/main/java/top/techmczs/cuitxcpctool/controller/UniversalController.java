@@ -86,7 +86,6 @@ public class UniversalController {
     public Result<String> logout() {
         return Result.success();
     }
-
     /**
      * SSE连接入口
      */

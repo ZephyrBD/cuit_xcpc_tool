@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Contest } from "@xcpcio/core";
-import type { Contest as IContest, Lang } from "@xcpcio/types";
-import { createContest } from "@xcpcio/core";
-import { ContestState } from "@xcpcio/types";
+import type {Contest} from "@xcpcio/core";
+import {createContest} from "@xcpcio/core";
+import type {Contest as IContest, Lang} from "@xcpcio/types";
+import {ContestState} from "@xcpcio/types";
 
 const props = defineProps<{
   dataSourceUrl: string;

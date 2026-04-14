@@ -1,5 +1,5 @@
-import type { Person as IPerson, Persons as IPersons, Text as IText } from "@xcpcio/types";
-import { I18nText } from "./basic-types";
+import type {Person as IPerson, Persons as IPersons, Text as IText} from "@xcpcio/types";
+import {I18nText} from "./basic-types";
 
 export class Person {
   name: I18nText;
