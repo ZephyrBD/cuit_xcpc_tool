@@ -48,7 +48,7 @@ public class DjBalloonServiceImpl implements DjBalloonService {
 
     // 待推送气球队列
     private final List<DjBalloon> NEW_BALLOONS = new CopyOnWriteArrayList<>();
-    private final Map<String, Long> FIRST_SOLVE = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, DjBalloon> FIRST_SOLVE_BALLOON = Collections.synchronizedMap(new HashMap<>());
 
     private final DomjudgeFetchService domjudgeFetchService;
     private final ToolProperties toolProperties;
@@ -83,8 +83,7 @@ public class DjBalloonServiceImpl implements DjBalloonService {
     @Override
     public IPage<BalloonTaskDTO> getAllBalloonFromDomjudge(int cur) {
         List<DjBalloon> dtoList = fetchBalloon(false);
-        List<BalloonTaskDTO> balloonTaskDTOList = Objects.nonNull(dtoList) ?
-                dtoList.stream().map(this::DjBallonToBalloon).toList() : Collections.emptyList();
+        List<BalloonTaskDTO> balloonTaskDTOList = dtoList.stream().map(this::DjBallonToBalloon).toList();
 
         Page<BalloonTaskDTO> page = new Page<>(cur, 10);
         page.setRecords(balloonTaskDTOList);
@@ -95,7 +94,8 @@ public class DjBalloonServiceImpl implements DjBalloonService {
     private List<DjBalloon> fetchBalloon(boolean isTodo) {
         try {
             List<DjBalloon> dtoList = domjudgeFetchService.getBalloons(isTodo);
-            if (isTodo && dtoList != null && !dtoList.isEmpty()) {
+            dtoList.sort(Comparator.comparing(DjBalloon::getTime));
+            if (isTodo && !dtoList.isEmpty()) {
                 for (DjBalloon dto : dtoList) {
                     if(toolProperties.isShouldForbiddenOnlinePrint() && dto.getLocation().equals(toolProperties.getOnlineLocationKey())){
                         setBalloonDone(dto.getBalloonId());
@@ -114,10 +114,28 @@ public class DjBalloonServiceImpl implements DjBalloonService {
 
     private BalloonTaskDTO DjBallonToBalloon(DjBalloon balloonDto) {
         try {
-            boolean isFirst = !FIRST_SOLVE.containsKey(balloonDto.getContestProblem().getShortName()) || FIRST_SOLVE.get(balloonDto.getContestProblem().getShortName()).equals(balloonDto.getBalloonId());
+            String problemId = balloonDto.getContestProblem().getShortName();
+            Long currentBalloonId = balloonDto.getBalloonId();
+            double currentTime = Double.parseDouble(balloonDto.getTime());
 
-            if (FIRST_SOLVE.containsKey(balloonDto.getContestProblem().getShortName())) {
-                FIRST_SOLVE.put(balloonDto.getContestProblem().getShortName(), balloonDto.getBalloonId());
+            boolean isFirst;
+
+            // 该题目还没有记录 → 一定是首杀
+            if (!FIRST_SOLVE_BALLOON.containsKey(problemId)) {
+                isFirst = true;
+                FIRST_SOLVE_BALLOON.put(problemId, balloonDto);
+            } else {
+                // 已有记录，取出之前存的最早气球
+                DjBalloon firstBalloon = FIRST_SOLVE_BALLOON.get(problemId);
+                double firstTime = Double.parseDouble(firstBalloon.getTime());
+
+                // 时间更早 → 替换成真正的首杀
+                if (currentTime < firstTime) {
+                    isFirst = true;
+                    FIRST_SOLVE_BALLOON.put(problemId, balloonDto);
+                }
+                // 同一个气球重复拉取 → 依然标记首杀
+                else isFirst = currentBalloonId.equals(firstBalloon.getBalloonId());
             }
 
             String teamName = balloonDto.getTeam();

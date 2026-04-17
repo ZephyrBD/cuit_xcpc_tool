@@ -11,11 +11,11 @@ settings.domjudge-route-path=
 # Domjudge server port number
 settings.domjudge-port=
 # Domjudge contest unique identifier
-settings..domjudge-contest-id=
+settings.domjudge-contest-id=
 # Domjudge admin account username
-settings..domjudge-account=
+settings.domjudge-account=
 # Domjudge admin account password
-settings..domjudge-password=
+settings.domjudge-password=
 # Token for print task interface authentication
 settings.domjudge-print-token=
 
@@ -29,6 +29,7 @@ settings.use-special-client=false
 settings.nginx-verify-route-path=
 # Custom User-Agent for special client identification
 settings.special-client-user-agent=OMSClient
+settings.real-host=
 
 settings.unfreeze-board-time=
 settings.should-forbidden-online-print=

@@ -18,15 +18,19 @@ java -jar CUITXCPCTool-XXX.jar
 
 - `settings.properties`中需要注意：
   
-  - `org.domjudge.use-special-client`如果设置为`true`，理论上本程序只设计了对`OMSClient 1.X`的判断，具体依赖请求时会发送的特别`Cookie`，如果需要实现对其它客户端的判断，需要修改`DjAuthService`的实现。
+  - `settings.use-special-client`如果设置为`true`，理论上本程序只设计了对`OMSClient 1.X`的判断，具体依赖请求时会发送的特别`Cookie`，如果需要实现对其它客户端的判断，需要修改`DjAuthService`的实现。
   
-  - 开启后需要配合`org.domjudge.nginx-verify-route-path`使用，原理是：
+  - 开启后需要配合`settings.nginx-verify-route-path`使用，原理是：
 
 ```plaintext
-校验通过——>返回token——>带token跳转-->nginx截获token-->请求验证token-->进入Domjudge
+校验通过——>返回token——>带token跳转——>nginx截获token——>请求验证token——>进入Domjudge
 ```
 
 - 为了确保稳定使用，推荐给`Domjudge`设置`BaseURL`。
+
+- `settings.unfreeze-board-time`为赛后解榜时间，单位是小时
+
+- `settings.should-forbidden-online-print`是否禁用线上打印，如果禁止，需要给线上的队伍设置一个特别的座位号并写在`settings.online-location-key`。
   
 > [!NOTE]
 > nginx的配置在`script`下有示例。
@@ -36,17 +40,15 @@ java -jar CUITXCPCTool-XXX.jar
 关于URL的拼接，参考下面实现：
 
 ```java
-public String getDomjudgeBalloonApiUrl(Boolean isNotDone){
-    return this.host + ":" + this.port + routePath + "/api/v4/contests/" + contestId + "/balloons?todo=" + isNotDone.toString();
-}
-
-public String getDomjudgeBalloonApiUrl(Long balloonId){
-    return this.host + ":" + this.port + routePath + "/api/v4/contests/" + contestId + "/balloons" + "/" + balloonId + "/done";
+public String getBaseUrl(){
+    return this.domjudgeHost + ":" + this.domjudgePort + domjudgeRoutePath;
 }
 
 public String getVerifyUrl(){
     return this.host + ":" + this.port + this.nginxVerifyRoutePath;
 }
+
+
 ```
 
 ### 自动打印

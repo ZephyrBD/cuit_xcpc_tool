@@ -52,6 +52,8 @@ public class ToolProperties {
     private String specialClientUserAgent;
     @RequiredConfig
     private String nginxVerifyRoutePath;
+    @RequiredConfig
+    private String realHost;
 
     @RequiredConfig
     private int unfreezeBoardTime;
@@ -71,8 +73,8 @@ public class ToolProperties {
     public String getBasicAuth(){
         return "Basic " + Base64.getEncoder().encodeToString(this.getAuth().getBytes(StandardCharsets.UTF_8));
     }
-    public String getVerifyUrl(){
-        return this.domjudgeHost + ":" + this.domjudgePort + this.nginxVerifyRoutePath;
-    }
 
+    public String getVerifyUrl(){
+        return this.realHost + this.nginxVerifyRoutePath;
+    }
 }

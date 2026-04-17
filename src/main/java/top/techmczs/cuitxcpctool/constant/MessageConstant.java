@@ -41,7 +41,7 @@ public class MessageConstant {
     public static final String FORBIDDEN_PRINT = "{} forbidden print code!";
 
     public static final String SSE_LINK_SUCCESS = "SSE link success!";
-    public static final String SEE_CLOSE = "SSE connection closed. Remaining clients: {}";
+    public static final String SSE_CLOSE = "SSE connection closed. Remaining clients: {}";
     public static final String SSE_TIME_OUT = "SSE connection timed out. The client has been removed.";
     public static final String SSE_LINK_FAILED = "SSE connection exception!";
     public static final String SSE_SEND_INIT_MESSAGE_FAILED = "SSE send initial message failed.";

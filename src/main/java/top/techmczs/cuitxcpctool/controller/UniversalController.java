@@ -25,15 +25,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import top.techmczs.cuitxcpctool.CuitXcpcToolApplication;
 import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.ResponseMessageConstant;
+import top.techmczs.cuitxcpctool.entity.AdminLoginDTO;
 import top.techmczs.cuitxcpctool.properties.JwtProperties;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjAuthService;
@@ -57,15 +55,18 @@ public class UniversalController {
         return CuitXcpcToolApplication.CXTOOL_VERSION;
     }
 
-    @GetMapping("/admin/login")
+    @PostMapping("/admin/login")
     @Operation(description = "Admin请求登录")
     @Parameters({
             @Parameter(name = "userName",description = "用户名"),
             @Parameter(name = "password",description = "密码")
     })
-    public Result<String> login(String userName, String password) {
+    public Result<String> login(@RequestBody AdminLoginDTO loginDTO) {
+
+        String userName = loginDTO.getUserName();
+        String password = loginDTO.getPassword();
+
         if (JwtProperties.ADMIN_ACCOUNT.equals(userName) && jwtProperties.getAdminPassword().equals(password)) {
-            // 登录成功
             String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), JwtProperties.ADMIN_TOKEN_TIME, userName);
             return Result.success(token);
         }

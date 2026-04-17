@@ -21,7 +21,6 @@ package top.techmczs.cuitxcpctool.handler;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,8 +29,6 @@ import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.ResponseMessageConstant;
 import top.techmczs.cuitxcpctool.exception.BaseException;
 import top.techmczs.cuitxcpctool.result.Result;
-
-import java.io.IOException;
 
 @RestControllerAdvice
 @Slf4j
@@ -60,18 +57,19 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(Exception.class)
-    public Result<String> globalExceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
-        // 如果是SSE请求，直接抛出，不返回JSON
-        String contentType = request.getContentType();
-        if (contentType != null && contentType.equals(MediaType.TEXT_EVENT_STREAM_VALUE)) {
-            try {
-                response.flushBuffer();
-            } catch (IOException ex) {
-                log.warn(MessageConstant.SSE_TIME_OUT);
+    public Result<?> globalExceptionHandler(Exception e, HttpServletRequest request) {
+        // SSE 长连接异常分支
+        if (MediaType.TEXT_EVENT_STREAM_VALUE.equals(request.getContentType())) {
+            log.warn(MessageConstant.SSE_TIME_OUT);
+            if (request.isAsyncStarted()) {
+                request.getAsyncContext().complete();
             }
-            return Result.error(ResponseMessageConstant.ERROR);
+            // 这里return什么都无所谓，Spring已经不处理了
+            return null;
         }
-        log.error(MessageConstant.SYSTEM_ERROR, e.getMessage());
+
+        // 普通接口：原样返回Result，前端完美接收json
+        log.error(MessageConstant.SYSTEM_ERROR,e.getMessage());
         return Result.error(ResponseMessageConstant.ERROR);
     }
 }

@@ -18,15 +18,15 @@
 
 export const generateBalloonTxt = (task, formatDateTime) => {
   return `
-======= BALLOONS TICKET =======
+== BALLOON TICKET ==
 Balloon : ${task.balloonId}
 Team    : ${task.teamName}
 Seat    : ${task.teamLocation}
 Problem : ${task.problem}
 Color   : ${task.colorName}
 First   : ${task.isFirst ? "YES" : "NO"}
-Time    : ${formatDateTime(task.time)}
-== POWERED BY CUIT XCPC TOOL ==
+  ${formatDateTime(task.time)}
+== CUIT XCPC TOOL ==
 `;
 };
 
@@ -66,17 +66,23 @@ export const printBalloonTxt = (task, formatDateTime) => {
 };
 
 export const printByIframe = (blobData) => {
-  const url = URL.createObjectURL(new Blob([blobData],{type:'application/pdf'}));
+  const url = URL.createObjectURL(new Blob([blobData], { type: 'application/pdf' }));
   const iframe = document.createElement('iframe');
-  iframe.style.display='none';
-  iframe.src=url;
-  iframe.onload=()=>setTimeout(()=>{
-    iframe.contentWindow.focus();
-    iframe.contentWindow.print();
-    setTimeout(()=>{
-      document.body.removeChild(iframe);
-      URL.revokeObjectURL(url);
-    },1000);
-  },500);
+  iframe.style.display = 'none';
+  iframe.src = url;
+
+  iframe.onload = () => setTimeout(() => {
+    const printWindow = iframe.contentWindow;
+    printWindow.focus();
+    printWindow.print();
+
+    printWindow.addEventListener('afterprint', () => {
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+        URL.revokeObjectURL(url);
+      }, 500);
+    });
+  }, 500);
+
   document.body.appendChild(iframe);
 };

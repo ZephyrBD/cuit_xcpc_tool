@@ -19,9 +19,9 @@
 <template>
   <div class="login-wrapper">
     <div class="login-box">
-        <div class="md-logo-wrapper">
-          <img src="/cxtool/images/Logo.png" alt="软件图标" class="md-logo">
-        </div>
+      <div class="md-logo-wrapper">
+        <img src="/cxtool/images/Logo.png" alt="软件图标" class="md-logo">
+      </div>
       <h3 class="md-main-title">CUIT XCPC TOOL</h3>
       <h1 class="dashboard-title">Admin Dashboard</h1>
       <div class="input-item">
@@ -69,8 +69,9 @@ const login = async () => {
   }
 
   try {
-    const res = await axios.get('/admin/login', {
-      params: { userName: username, password: password }
+    const res = await axios.post('/admin/login', {
+      userName: username,
+      password: password
     })
 
     if (res.data.code === 1) {

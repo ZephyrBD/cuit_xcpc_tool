@@ -225,7 +225,7 @@ const connectGlobalSse = () => {
         const pdf = await api.print.downloadPrintPdf(task.taskId);
         printByIframe(pdf.data);
         printStatus.value = { type: 'success', message: '自动打印完成' };
-        setTimeout(() => { currentPrintTask.value = null; printStatus.value = null; }, 3000);
+        //setTimeout(() => { currentPrintTask.value = null; printStatus.value = null; }, 3000);
       }
     } catch (err) {
       if(autoPrintWindowVisible.value) printStatus.value = { type: 'error', message: '打印失败' };

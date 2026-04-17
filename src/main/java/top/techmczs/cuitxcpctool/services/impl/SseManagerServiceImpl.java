@@ -51,7 +51,7 @@ public class SseManagerServiceImpl implements SseManagerService {
         // 生命周期统一管理
         emitter.onCompletion(() -> {
             GLOBAL_SSE_CLIENTS.remove(emitter);
-            log.info(MessageConstant.SEE_CLOSE, GLOBAL_SSE_CLIENTS.size());
+            log.info(MessageConstant.SSE_CLOSE, GLOBAL_SSE_CLIENTS.size());
         });
         emitter.onTimeout(() -> {
             GLOBAL_SSE_CLIENTS.remove(emitter);
@@ -60,7 +60,7 @@ public class SseManagerServiceImpl implements SseManagerService {
         });
         emitter.onError(ex -> {
             GLOBAL_SSE_CLIENTS.remove(emitter);
-            emitter.completeWithError(ex);
+            emitter.complete();
             log.error(MessageConstant.SSE_LINK_FAILED);
         });
 

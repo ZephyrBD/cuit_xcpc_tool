@@ -17,7 +17,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-# Parameter order: Location TeamName [teamid] FilePath
+# Parameter order: Location TeamName [teamid] FilePath OriginalFileName
 LOCATION="$1"
 TEAMNAME="$2"
 EXAMNUM="$3"
@@ -25,8 +25,8 @@ FILE="$4"
 ORIGNAME="$5"
 
 # ================= Configuration =================
-PRINT_API="{yourToolHost}/cxtool/admin/print/task"
-API_TOKEN="{yourPrintToken}"
+PRINT_API="http://127.0.0.1/cxtool/admin/print/task"
+API_TOKEN="3486dsay89x6786f87aerfbxncmbmghjf"
 PDF_DIR="/tmp/print"
 MAX_PRINT_PAGES=10
 DENIED_LOCATION="Online"
@@ -37,8 +37,7 @@ LOCATION=$(echo "$LOCATION" | tr -d "'\"" | xargs)
 TEAMNAME=$(echo "$TEAMNAME" | tr -d "'\"" | xargs)
 EXAMNUM=$(echo "$EXAMNUM" | tr -d "'\"" | xargs)
 FILE=$(echo "$FILE" | tr -d "'\"" | xargs)
-# Get original file name for type validation
-ORIGNAME=$(basename "$FILE")
+ORIGNAME=$(echo "$ORIGNAME" | tr -d "'\"" | xargs)
 
 # Print basic info
 echo "====================="
@@ -51,8 +50,8 @@ echo "====================="
 # --------------------------
 # Validation 1: Required fields
 # --------------------------
-if [ -z "$TEAMNAME" ] || [ -z "$LOCATION" ]; then
-    echo "Error: Team information (location and name) cannot be empty."
+if [ -z "$TEAMNAME" ] || [ -z "$LOCATION" ] || [ -z "$ORIGNAME" ]; then
+    echo "Error: Team location/name and original file name cannot be empty."
     exit 1
 fi
 
