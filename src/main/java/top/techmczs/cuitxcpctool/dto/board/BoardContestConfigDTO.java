@@ -102,6 +102,8 @@ public class BoardContestConfigDTO {
         private String official;
         @JsonProperty("unofficial")
         private String unofficial;
+        @JsonProperty("girl")
+        private String girl;
     }
 
     @Data

@@ -27,8 +27,6 @@ ORIGNAME="$5"
 # ================= Configuration =================
 PRINT_API="http://127.0.0.1/cxtool/admin/print/task"
 API_TOKEN="3486dsay89x6786f87aerfbxncmbmghjf"
-PDF_DIR="/tmp/print"
-MAX_PRINT_PAGES=10
 DENIED_LOCATION="Online"
 # ==================================================
 
@@ -43,15 +41,16 @@ ORIGNAME=$(echo "$ORIGNAME" | tr -d "'\"" | xargs)
 echo "====================="
 echo "Team Location: [${LOCATION}]"
 echo "Team Name: [${TEAMNAME}]"
-echo "Source File: [${FILE}]"
-echo "Original File Name: [${ORIGNAME}]"
+echo "Team ExamNum: [${EXAMNUM}]"
+echo "Source File Path: [${FILE}]"
+echo "Source File Name: [${ORIGNAME}]"
 echo "====================="
 
 # --------------------------
 # Validation 1: Required fields
 # --------------------------
-if [ -z "$TEAMNAME" ] || [ -z "$LOCATION" ] || [ -z "$ORIGNAME" ]; then
-    echo "Error: Team location/name and original file name cannot be empty."
+if [ -z "$TEAMNAME" ] || [ -z "$LOCATION" ] || [ -z "$ORIGNAME" ] || [ -z "$EXAMNUM" ]; then
+    echo "Error: Team location/name/examNum and original file name cannot be empty."
     exit 1
 fi
 
@@ -74,51 +73,13 @@ fi
 # --------------------------
 # Check required system tools
 # --------------------------
-command -v enscript >/dev/null 2>&1 || { echo "Error: enscript is required but not installed."; exit 1; }
-command -v ps2pdf >/dev/null 2>&1 || { echo "Error: ps2pdf is required but not installed."; exit 1; }
-command -v pdfinfo >/dev/null 2>&1 || { echo "Error: pdfinfo (poppler-utils) is required but not installed."; exit 1; }
 command -v curl >/dev/null 2>&1 || { echo "Error: curl is required but not installed."; exit 1; }
-
-# Create temporary directory
-mkdir -p "$PDF_DIR"
-PDF_FILE="${PDF_DIR}/${TEAMNAME}_$(date +%Y%m%d%H%M%S).pdf"
-
-# Generate PDF from text file
-enscript -b "ExamNumber: ${EXAMNUM},Delivery location: ${LOCATION},Print Time: $(date +%Y%m%d%H%M%S)" -f Courier10 -A4 "$FILE" -p - | ps2pdf - "$PDF_FILE"
-
-# --------------------------
-# Validation 4: PDF generation check
-# --------------------------
-if [ ! -f "$PDF_FILE" ]; then
-    echo "Error: Failed to generate PDF file."
-    exit 1
-fi
-
-# --------------------------
-# Validation 5: Page count limit (max 10 pages)
-# --------------------------
-PAGE_COUNT=$(pdfinfo "$PDF_FILE" | grep Pages | awk '{print $2}')
-if ! [[ "$PAGE_COUNT" =~ ^[0-9]+$ ]]; then
-    echo "Error: Failed to read PDF page count."
-    rm -f "$PDF_FILE"
-    exit 1
-fi
-if [[ "$PAGE_COUNT" -gt "$MAX_PRINT_PAGES" ]]; then
-    echo "Error: Page count exceeds limit. Max allowed: $MAX_PRINT_PAGES, Current: $PAGE_COUNT."
-    rm -f "$PDF_FILE"
-    exit 1
-fi
 
 # --------------------------
 # Send print request to API
 # --------------------------
+echo "Submitting print task to server..."
 curl -X POST "$PRINT_API" \
 -H "token: $API_TOKEN" \
--F "file=@${PDF_FILE}" \
+-F "file=@${FILE};filename=${ORIGNAME}" \
 -F "printTeamDTO={\"examNum\":\"${EXAMNUM}\"};type=application/json"
-
-echo -e "\nPrint task submitted successfully"
-
-# Clean up temporary PDF file
-rm -f "$PDF_FILE"
-echo "Temporary PDF file cleaned up: ${PDF_FILE}"

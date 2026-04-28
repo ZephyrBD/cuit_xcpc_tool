@@ -31,6 +31,7 @@ import top.techmczs.cuitxcpctool.entity.domjudge.*;
 import top.techmczs.cuitxcpctool.properties.ToolProperties;
 import top.techmczs.cuitxcpctool.services.DomjudgeFetchService;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,16 @@ public class DomjudgeFetchServiceImpl implements DomjudgeFetchService {
                 HttpMethod.GET,
                 new HttpEntity<>(getHeaders()),
                 DjContest.class
+        ).getBody();
+    }
+
+    @Override
+    public List<DjUser> getUsers() {
+        return restTemplate.exchange(
+                toolProperties.getBaseUrl() + "/api/v4/users",
+                HttpMethod.GET,
+                new HttpEntity<>(getHeaders()),
+                new ParameterizedTypeReference<List<DjUser>>() {}
         ).getBody();
     }
 
@@ -103,6 +114,7 @@ public class DomjudgeFetchServiceImpl implements DomjudgeFetchService {
         ).getBody();
     }
 
+
     @Override
     public DjMedals getMedals() {
         // 获取 YAML 原始字符串
@@ -123,13 +135,17 @@ public class DomjudgeFetchServiceImpl implements DomjudgeFetchService {
     }
 
     @Override
-    public List<DjBalloon> getBalloons(Boolean isTodo) {
-        return restTemplate.exchange(
-                getUrl("/balloons?todo="+isTodo.toString()),
+    public List<DjBalloon> getSortedBalloons() {
+        List<DjBalloon> djBalloons = restTemplate.exchange(
+                getUrl("/balloons"),
                 HttpMethod.GET,
                 new HttpEntity<>(getHeaders()),
                 new ParameterizedTypeReference<List<DjBalloon>>() {}
         ).getBody();
+        if (djBalloons != null) {
+            djBalloons.sort(Comparator.comparing(DjBalloon::getTime));
+        }
+        return djBalloons;
     }
 
     @Override

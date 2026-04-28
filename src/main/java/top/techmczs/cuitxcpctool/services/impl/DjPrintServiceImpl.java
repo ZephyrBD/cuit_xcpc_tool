@@ -15,9 +15,9 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
 package top.techmczs.cuitxcpctool.services.impl;
 
+import cn.hutool.core.io.IoUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -43,21 +43,22 @@ import top.techmczs.cuitxcpctool.properties.ToolProperties;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjPrintService;
 import top.techmczs.cuitxcpctool.services.SseManagerService;
+import top.techmczs.cuitxcpctool.utils.CodeFormatter;
 import top.techmczs.cuitxcpctool.utils.PdfUtil;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class DjPrintServiceImpl implements DjPrintService {
 
-    // 注入全局SSE管理器
     private final SseManagerService sseManagerService;
-
     private final SqlQueue<PrintTask> printTaskQueue;
     private final PrintTaskMapper printTaskMapper;
     private final TeamMapper teamMapper;
@@ -66,32 +67,46 @@ public class DjPrintServiceImpl implements DjPrintService {
     @Override
     public void addPrintTask(MultipartFile file, PrintTeamDTO printTeamDTO) {
         try {
-            //禁止线上打印
-            if(toolProperties.isShouldForbiddenOnlinePrint()){
-                if(teamMapper.selectById(printTeamDTO.getExamNum()).getPosition().equals(toolProperties.getOnlineLocationKey())){
-                    log.info(MessageConstant.FORBIDDEN_PRINT, printTeamDTO.getExamNum());
-                    return;
-                }
+            // 校验队伍
+            Team team = teamMapper.selectById(printTeamDTO.getExamNum());
+            if (team == null) throw new TeamNotExistException(MessageConstant.TEAM_NOT_FOUND);
+
+            // 禁止线上队伍打印
+            if (toolProperties.isShouldForbiddenOnlinePrint()
+                    && team.getPosition().equals(toolProperties.getOnlineLocationKey())) {
+                log.info(MessageConstant.FORBIDDEN_PRINT, printTeamDTO.getExamNum());
+                return;
             }
+
+            // 读取源码文件
+            String code = IoUtil.read(file.getInputStream(), StandardCharsets.UTF_8);
+            // 获取文件后缀
+            String suffix = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+            // 格式化代码
+            String formattedCode = CodeFormatter.formatCode(code, suffix);
+            // 生成PDF
+            String pdfPath = PdfUtil.generatePdfFromCode(formattedCode, team);
+
             // 入库
-            PrintTask task = enqueue(file, printTeamDTO);
-            log.info(MessageConstant.TEAM_NEED_PRINT,printTeamDTO.getExamNum());
-            // 立即推送给前端
+            PrintTask task = new PrintTask(printTeamDTO, file.getOriginalFilename(), pdfPath);
+            printTaskQueue.enqueue(task, printTaskMapper);
+            log.info(MessageConstant.TEAM_NEED_PRINT, printTeamDTO.getExamNum());
+
+            // 推送前端
             pushPrintTaskToSSE(task);
         } catch (Exception e) {
+            log.error(MessageConstant.ADD_PRINT_TASK_FAILED, e);
             throw new QueueTaskException(MessageConstant.ADD_PRINT_TASK_FAILED);
         }
     }
 
     @Scheduled(fixedRate = 60000)
     public void rePushPendingPrintTask() {
-        // 查询待处理任务
         List<PrintTask> pendingTasks = printTaskQueue.dequeueTasks(printTaskMapper);
         if (pendingTasks.isEmpty()) {
             sseManagerService.sendHeartbeat();
             return;
         }
-        // 广播未处理任务
         List<PrintTaskDTO> dtoList = buildPrintTaskDTO(pendingTasks);
         sseManagerService.broadcast(SseEventConstant.PRINT_TASK, Result.success(dtoList));
     }
@@ -110,7 +125,9 @@ public class DjPrintServiceImpl implements DjPrintService {
 
     @Override
     public byte[] getPdfFileByTaskId(Long taskId) {
-        return getPdfFile(printTaskMapper.selectById(taskId).getFilePath());
+        PrintTask task = printTaskMapper.selectById(taskId);
+        if (task == null) throw new GetFileErrorException();
+        return getPdfFile(task.getFilePath());
     }
 
     @Override
@@ -130,9 +147,9 @@ public class DjPrintServiceImpl implements DjPrintService {
 
         return new Page<PrintTaskDTO>(curPage, 10)
                 .setRecords(dtoList)
-                .setTotal(taskPage.getTotal()) // 总条数
-                .setCurrent(taskPage.getCurrent())  // 当前页
-                .setSize(taskPage.getSize()); // 每页条数
+                .setTotal(taskPage.getTotal())
+                .setCurrent(taskPage.getCurrent())
+                .setSize(taskPage.getSize());
     }
 
     @Override
@@ -140,42 +157,27 @@ public class DjPrintServiceImpl implements DjPrintService {
         printTaskQueue.clear(PrintTask.class);
     }
 
-    private PrintTask enqueue(MultipartFile file, PrintTeamDTO printTeamDTO) {
-        try{
-            String filePath = PdfUtil.savePdf(file);
-            PrintTask task = new PrintTask(printTeamDTO, file.getOriginalFilename(), filePath);
-            printTaskQueue.enqueue(task, printTaskMapper);
-            return task;
-        } catch (Exception e){
-            throw new QueueTaskException(MessageConstant.ADD_PRINT_TASK_FAILED);
+    private byte[] getPdfFile(String filePath) {
+        File localFile = PdfUtil.readPdf(filePath);
+        if (!localFile.exists()) throw new GetFileErrorException();
+        try {
+            return Files.readAllBytes(localFile.toPath());
+        } catch (Exception e) {
+            throw new GetFileErrorException(MessageConstant.TRANSFER_PRINT_TASK_FAILED);
         }
     }
 
     private List<PrintTaskDTO> buildPrintTaskDTO(List<PrintTask> tasks) {
         if (tasks.isEmpty()) return Collections.emptyList();
-
         return tasks.stream().map(task -> {
             Team team = teamMapper.selectById(task.getExamNum());
-            String teamName = team == null ? MessageConstant.UNKNOWN_TEAM: team.getTeamName();
-            String position = team == null ? MessageConstant.UNKNOWN_TEAM_POSITION: team.getPosition();
-
+            String teamName = team == null ? MessageConstant.UNKNOWN_TEAM : team.getTeamName();
+            String position = team == null ? MessageConstant.UNKNOWN_TEAM_POSITION : team.getPosition();
             return new PrintTaskDTO()
                     .setTaskId(task.getId())
                     .setTeamName(teamName)
                     .setTeamPosition(position)
                     .setStatus(task.getStatus());
         }).toList();
-    }
-
-    private byte[] getPdfFile(String filePath) {
-        File localFile = PdfUtil.readPdf(filePath);
-        if (!localFile.exists()) {
-            throw new GetFileErrorException();
-        }
-        try {
-            return Files.readAllBytes(localFile.toPath());
-        } catch (Exception e) {
-            throw new GetFileErrorException(MessageConstant.TRANSFER_PRINT_TASK_FAILED);
-        }
     }
 }

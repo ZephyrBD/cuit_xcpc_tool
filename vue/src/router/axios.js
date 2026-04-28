@@ -34,7 +34,7 @@ axios.interceptors.response.use(
   err => {
     if (err.response?.status === 401) {
       localStorage.removeItem('token')
-      window.location.href = '/cxtool/login'
+      window.location.href = '/cxtool/#/login'
     }
     return Promise.reject(err)
   }

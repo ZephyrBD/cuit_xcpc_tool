@@ -21,6 +21,7 @@
     <div style="text-align: center;">
       <p class="danger-operation">危险：此操作会清空队伍信息！</p>
       <p>导入前请务必先点击开始新比赛，否则无法导入！</p>
+      <p>导入数据表头需要为[ICPC_ID,PASSWORD]！</p>
       <p class="danger-operation">比赛中执行会导致系统异常！</p>
     </div>
     <template #footer>

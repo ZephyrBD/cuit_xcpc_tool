@@ -22,7 +22,7 @@
       <el-button type="primary" @click="$emit('refresh')" size="small">刷新队伍信息</el-button>
       <!-- 上传Excel按钮 -->
       <el-button type="success" size="small" @click="triggerFileSelect">
-        <i class="el-icon-upload"></i> 导入队伍Excel
+        <i class="el-icon-upload"></i> 补充队伍登录密码
       </el-button>
     </div>
 
@@ -36,8 +36,8 @@
         <el-table-column prop="teamName" label="队伍名称" min-width="120" show-overflow-tooltip></el-table-column>
         <el-table-column prop="school" label="学校" min-width="120" show-overflow-tooltip></el-table-column>
         <el-table-column prop="position" label="位置" min-width="120" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="examNumber" label="考号" min-width="120"></el-table-column>
-        <el-table-column prop="account" label="账号" min-width="120"></el-table-column>
+        <el-table-column prop="examNumber" label="考号(ICPC ID)" min-width="120"></el-table-column>
+        <el-table-column prop="account" label="账号(Username)" min-width="120"></el-table-column>
         <el-table-column prop="password" label="密码" min-width="120"></el-table-column>
         <el-table-column prop="teammate" label="队员" min-width="120"></el-table-column>
         <el-table-column prop="coach" label="教练" min-width="120"></el-table-column>

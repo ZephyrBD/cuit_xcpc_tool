@@ -17,10 +17,15 @@
   -->
 
 <template>
-  <div class="login-wrapper">
+  <div class="login-wrapper" v-show="isMounted">
     <div class="login-box">
       <div class="md-logo-wrapper">
-        <img src="/cxtool/images/Logo.png" alt="软件图标" class="md-logo">
+        <img
+            src="/cxtool/images/Logo.png"
+            alt="软件图标"
+            class="md-logo"
+            @error="handleImgError"
+        >
       </div>
       <h3 class="md-main-title">CUIT XCPC TOOL</h3>
       <h1 class="dashboard-title">Admin Dashboard</h1>
@@ -41,24 +46,48 @@
       </div>
     </div>
   </div>
+
+  <!-- 原生兜底加载（无内嵌style，Vue编译安全） -->
+  <div id="fallback" v-show="!isMounted">
+    <div class="fallback-loading"></div>
+    <p class="fallback-text">页面加载中...</p>
+    <p class="fallback-tip">网络较差，请稍候...</p>
+  </div>
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
-import {useRouter} from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
-import {ElMessage} from 'element-plus'
-import {getAppVersion} from '@/api/utils'
+import { ElMessage } from 'element-plus'
+import { getAppVersion } from '@/api/utils'
 
 const examNum = ref('')
 const pwd = ref('')
 const router = useRouter()
 const version = ref('')
+const isMounted = ref(false)
+
+// 请求超时设置
+axios.defaults.timeout = 10000
 
 onMounted(async () => {
-  version.value = await getAppVersion()
+  try {
+    version.value = await getAppVersion().catch(() => '未知版本')
+  } catch (e) {
+    version.value = '未知版本'
+  } finally {
+    // 渲染完成，显示页面
+    isMounted.value = true
+  }
 })
 
+// 图片加载失败容错
+const handleImgError = (e) => {
+  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRTNGMkZEIi8+PHRleHQgeD0iNTAiIHk9IjQ1IiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiMxOTc2RDIiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxvZ288L3RleHQ+PC9zdmc+'
+}
+
+// 登录逻辑
 const login = async () => {
   const username = examNum.value.trim()
   const password = pwd.value.trim()
@@ -83,12 +112,17 @@ const login = async () => {
       ElMessage.error('账号或密码错误')
     }
   } catch (error) {
-    ElMessage.error('登录失败')
+    ElMessage.error('登录失败，请检查网络')
   }
 }
 </script>
 
 <style>
+/* 全局动画（修复：移到这里，模板内无style标签） */
+@keyframes rotate {
+  to { transform: rotate(360deg) }
+}
+
 :root {
   --md-primary: #2196F3;
   --md-primary-dark: #1976D2;
@@ -105,6 +139,39 @@ const login = async () => {
   --md-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* 兜底加载样式 */
+#fallback {
+  margin:0;
+  padding:20px;
+  box-sizing:border-box;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background:#F5F7FA;
+  font-family:Roboto,'Microsoft Yahei',sans-serif;
+}
+.fallback-loading {
+  width:60px;
+  height:60px;
+  border:4px solid #2196F3;
+  border-top-color:transparent;
+  border-radius:50%;
+  animation:rotate 1s linear infinite;
+}
+.fallback-text {
+  margin-top:20px;
+  font-size:16px;
+  color:#49454F;
+}
+.fallback-tip {
+  margin-top:8px;
+  font-size:12px;
+  color:#79747E;
+}
+
+/* 原有样式不变 */
 * {
   margin: 0;
   padding: 0;
@@ -121,7 +188,6 @@ const login = async () => {
   padding: 16px;
 }
 
-/* ✅ 核心修复：添加弹性布局，让所有内容水平居中 */
 .login-box {
   width: 100%;
   max-width: 420px;
@@ -132,14 +198,13 @@ const login = async () => {
   transition: box-shadow var(--md-transition);
   display: flex;
   flex-direction: column;
-  align-items: center; /* 水平居中所有子元素 */
+  align-items: center;
 }
 
 .login-box:hover {
   box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 }
 
-/* 管理后台标题样式 */
 .dashboard-title {
   font-size: 18px;
   color: var(--md-text-secondary);
@@ -151,7 +216,7 @@ const login = async () => {
 .input-item {
   margin-bottom: 28px;
   position: relative;
-  width: 100%; /* 输入框占满宽度 */
+  width: 100%;
 }
 
 .input-item input {

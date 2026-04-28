@@ -119,6 +119,7 @@ public class BoardConvertServiceImpl implements BoardConvertService {
         BoardContestConfigDTO.Group group = new BoardContestConfigDTO.Group();
         group.setOfficial("正式队伍");
         group.setUnofficial("打星队伍");
+        group.setGirl("女队");
         config.setGroup(group);
 
         BoardContestConfigDTO.Logo logo = new BoardContestConfigDTO.Logo();
@@ -147,7 +148,20 @@ public class BoardConvertServiceImpl implements BoardConvertService {
             team.setId(dj.getId());
             team.setName(dj.getName());
             team.setOrganization(Objects.requireNonNullElse(dj.getAffiliation(), ""));
-            team.setGroup(dj.getGroupIds().contains("participants") ? List.of("official") : List.of("unofficial"));
+            String firstGroup = dj.getGroupIds().isEmpty() ? "" : dj.getGroupIds().getFirst();
+            List<String> groups = new ArrayList<>();
+
+            if (firstGroup.contains("participants")) {
+                groups.add("official");
+            } else {
+                groups.add("unofficial");
+            }
+
+            if (firstGroup.contains("women")) {
+                groups.add("girl");
+            }
+
+            team.setGroup(groups);
             team.setLocation(dj.getLocation() != null ? dj.getLocation().getDescription() : "");
             team.setIcpcId(Objects.requireNonNullElse(dj.getIcpcId(), ""));
             // 从数据库查询本地队伍数据
@@ -159,7 +173,7 @@ public class BoardConvertServiceImpl implements BoardConvertService {
             List<BoardTeamDTO.Coach> coachList = new ArrayList<>();
             String coachStr = localTeam.getCoach();
             if (coachStr != null && !coachStr.isBlank()) {
-                // 按逗号分割，支持 1个/多个教练
+                // 按逗号分割，支持多个教练
                 String[] coachNames = coachStr.split(",");
                 for (String name : coachNames) {
                     BoardTeamDTO.Name coachName = new BoardTeamDTO.Name();
@@ -206,15 +220,21 @@ public class BoardConvertServiceImpl implements BoardConvertService {
 
         List<BoardRunDTO> runs = new ArrayList<>();
         DjContest djContest = domjudgeFetchService.getContest();
-        long freezeTime = TimeUtil.durationToSeconds(djContest.getScoreboardFreezeDuration()) * 1000L;
-        long unFreezeTime = TimeUtil.isoToMills(djContest.getEndTime()) + toolProperties.getUnfreezeBoardTime() * 60 * 60 * 1000L;
+        long startTime = TimeUtil.isoToMills(djContest.getStartTime());
+        long endTime = TimeUtil.isoToMills(djContest.getEndTime());
+
+        long freezeAbsoluteTime = endTime - TimeUtil.durationToSeconds(djContest.getScoreboardFreezeDuration()) * 1000L;
+        long unFreezeAbsoluteTime = endTime + toolProperties.getUnfreezeBoardTime() * 60 * 60 * 1000L;
+        long now = System.currentTimeMillis();
+
         for (DjSubmission sub : submissions) {
             BoardRunDTO run = new BoardRunDTO();
             run.setId(sub.getId());
             run.setTeamId(sub.getTeamId());
             run.setProblemId(problemMap.get(sub.getProblemId()));
+            long submitTime = startTime + TimeUtil.durationToMillis(sub.getContestTime());
             run.setTimestamp(TimeUtil.durationToMillis(sub.getContestTime()));
-            if(freezeTime < run.getTimestamp() && run.getTimestamp() < unFreezeTime){
+            if (submitTime > freezeAbsoluteTime && now < unFreezeAbsoluteTime) {
                 run.setStatus("PENDING");
             } else {
                 run.setStatus(StatusMappingUtil.convert(judgeMap.getOrDefault(sub.getId(), "PENDING")));

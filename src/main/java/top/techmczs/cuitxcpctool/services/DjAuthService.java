@@ -23,13 +23,13 @@ import org.springframework.stereotype.Component;
 import top.techmczs.cuitxcpctool.common.QueueTaskStatus;
 import top.techmczs.cuitxcpctool.dto.AdminDTO;
 import top.techmczs.cuitxcpctool.dto.AuthTaskDTO;
-import top.techmczs.cuitxcpctool.dto.DjTeamDTO;
+import top.techmczs.cuitxcpctool.dto.TeamDTO;
 
 @Component
 public interface DjAuthService {
     boolean verifyToken(String token);
-    DjTeamDTO verifyClientAndGetToken(String examNum, String clientId,String UserAgent);
-    DjTeamDTO getApprovedTeamInfo(String examNum);
+    TeamDTO verifyClientAndGetToken(String examNum, String clientId, String UserAgent);
+    TeamDTO getApprovedTeamInfo(String examNum);
     QueueTaskStatus getAuthStatus(String examNum,String clientId);
     void acceptAuth(Long taskId);
     void denyAuth(Long taskId);

@@ -49,6 +49,11 @@ public class DjTeamController {
         return Result.success(djTeamService.queryTeamsByPage(curPage));
     }
 
+    @PostMapping("/team/sync")
+    public Result<String> syncTeams(){
+        djTeamService.syncTeamsFromDomjudge();
+        return Result.success(ResponseMessageConstant.SUCCESS);
+    }
     /**
      * 清空队伍数据库，并导入队伍数据
      * @param file 队伍名单

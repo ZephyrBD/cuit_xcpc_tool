@@ -187,12 +187,20 @@ const fetchBalloonTasks = async () => {
   const r=await api.balloon.getBalloonTasks(balloonCurrentPage.value);
   if(r.data.code===1){balloonTableData.value=r.data.data.records;balloonTotal.value=r.data.data.total;}
 };
-const fetchTeams = async () => {
-  const r = await api.team.getTeams(teamsCurrentPage.value);
-  if(r.data.code === 1){
-    teamsTableData.value = r.data.data.records;
-    teamsTotal.value = r.data.data.total;
+
+// 查数据库
+const fetchTeamsOnly = async () => {
+  const r = await api.team.getTeams(teamsCurrentPage.value)
+  if (r.data.code === 1) {
+    teamsTableData.value = r.data.data.records
+    teamsTotal.value = r.data.data.total
   }
+}
+
+// 同步DJ数据，再查询
+const fetchTeams = async () => {
+  await api.team.syncTeams()
+  await fetchTeamsOnly()
 }
 
 const connectGlobalSse = () => {
@@ -229,7 +237,9 @@ const connectGlobalSse = () => {
       }
     } catch (err) {
       if(autoPrintWindowVisible.value) printStatus.value = { type: 'error', message: '打印失败' };
-    } finally { fetchPrintTasks(); }
+    } finally {
+      await fetchPrintTasks();
+    }
   });
   globalSSE.value.addEventListener('balloonTask', async (e) => {
     try {
@@ -245,7 +255,9 @@ const connectGlobalSse = () => {
       }
     } catch (err) {
       if(autoBalloonWindowVisible.value) balloonStatus.value = { type: 'error', message: '小票打印失败' };
-    } finally { fetchBalloonTasks(); }
+    } finally {
+      await fetchBalloonTasks();
+    }
   });
   globalSSE.value.onerror = () => { globalSSE.value.close(); setTimeout(connectGlobalSse, 3000); };
 };
@@ -258,13 +270,19 @@ const stopAutoBalloon = () => { autoBalloonWindowVisible.value = false; currentB
 const handleAuthPageChange = (p) => { authCurrentPage.value = p; fetchAuthTasks(); };
 const handlePrintPageChange = (p) => { printCurrentPage.value = p; fetchPrintTasks(); };
 const handleBalloonPageChange = (p) => { balloonCurrentPage.value = p; fetchBalloonTasks(); };
-const handleTeamsPageChange = (p) => { teamsCurrentPage.value = p; fetchTeams(); };
+const handleTeamsPageChange = (p) => {teamsCurrentPage.value = p;fetchTeamsOnly()}
 
 const handleAcceptAuth = async (id) => {
-  await api.auth.acceptAuth(id); fetchAuthTasks(); authTaskDialogVisible.value = false; ElMessage.success('已同意');
+  await api.auth.acceptAuth(id);
+  await fetchAuthTasks();
+  authTaskDialogVisible.value = false;
+  ElMessage.success('已同意');
 };
 const handleDenyAuth = async (id) => {
-  await api.auth.denyAuth(id); fetchAuthTasks(); authTaskDialogVisible.value = false; ElMessage.success('已拒绝');
+  await api.auth.denyAuth(id);
+  await fetchAuthTasks();
+  authTaskDialogVisible.value = false;
+  ElMessage.success('已拒绝');
 };
 const handleDownloadPdf = async (id) => {
   const r=await api.print.downloadPrintPdf(id);
@@ -275,7 +293,9 @@ const handleManualPrint = async (row) => {
   try{
     await api.print.donePrintTask(row.taskId);
     const r=await api.print.downloadPrintPdf(row.taskId);
-    printByIframe(r.data);fetchPrintTasks();ElMessage.success('打印成功');
+    printByIframe(r.data);
+    await fetchPrintTasks();
+    ElMessage.success('打印成功');
   }finally{l.close();}
 };
 const handleBalloonPrint = async (row) => {
@@ -283,7 +303,8 @@ const handleBalloonPrint = async (row) => {
   try{
     printBalloonTxt(row, formatDateTime);
     await api.balloon.doneBalloonTask(row.balloonId);
-    fetchBalloonTasks();ElMessage.success('打印成功');
+    await fetchBalloonTasks();
+    ElMessage.success('打印成功');
   }catch{ElMessage.error('失败');}finally{l.close();}
 };
 
@@ -294,11 +315,13 @@ const confirmNewContest = async () => {
   const l=ElLoading.service({lock:true,text:'初始化中...'});
   try{
     await startNewContest();
-    fetchAuthTasks();fetchPrintTasks();ElMessage.success('完成');
+    await fetchAuthTasks();
+    await fetchPrintTasks();
+    ElMessage.success('完成');
   }catch{ElMessage.error('失败');}finally{l.close();}
 };
 
-const gotoBoard = async => {
+const gotoBoard = () => {
   window.open('/cxtool/board/', '_blank');
 }
 
@@ -355,7 +378,7 @@ const confirmUpload = async () => {
   try{
     const r=await api.team.importTeams(f);
     r.data.code===1?ElMessage.success('导入成功'):ElMessage.error('导入失败');
-    fetchTeams();
+    await fetchTeams();
   }catch{ElMessage.error('导入失败');}
 };
 

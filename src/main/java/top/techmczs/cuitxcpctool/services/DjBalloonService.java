@@ -26,4 +26,5 @@ import top.techmczs.cuitxcpctool.dto.BalloonTaskDTO;
 public interface DjBalloonService {
     IPage<BalloonTaskDTO> getAllBalloonFromDomjudge(int cur);
     void setBalloonDone(Long id);
+    void clearBalloons();
 }

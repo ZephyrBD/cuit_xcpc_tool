@@ -31,10 +31,11 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import top.techmczs.cuitxcpctool.CuitXcpcToolApplication;
 import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.ResponseMessageConstant;
-import top.techmczs.cuitxcpctool.entity.AdminLoginDTO;
+import top.techmczs.cuitxcpctool.dto.AdminLoginDTO;
 import top.techmczs.cuitxcpctool.properties.JwtProperties;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjAuthService;
+import top.techmczs.cuitxcpctool.services.DjBalloonService;
 import top.techmczs.cuitxcpctool.services.DjPrintService;
 import top.techmczs.cuitxcpctool.services.SseManagerService;
 import top.techmczs.cuitxcpctool.utils.JwtUtil;
@@ -48,6 +49,7 @@ public class UniversalController {
     private final SseManagerService sseManagerService;
     private final DjPrintService djPrintService;
     private final DjAuthService djAuthService;
+    private final DjBalloonService djBalloonService;
 
     @GetMapping("/public/version")
     @Operation(description = "获取版本号")
@@ -79,6 +81,7 @@ public class UniversalController {
         djPrintService.clearAll();
         djAuthService.clearAuthTaskQueue();
         djAuthService.clearTeamClient();
+        djBalloonService.clearBalloons();
         return Result.success(ResponseMessageConstant.SUCCESS);
     }
 

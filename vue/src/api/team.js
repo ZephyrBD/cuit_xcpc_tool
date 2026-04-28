@@ -18,12 +18,19 @@
 
 import axios from '../router/axios'
 
+// 获取队伍分页列表
 export const getTeams = (page) => {
   return axios.get(`/admin/team/page?cur_page=${page}`)
 }
 
+// 导入队伍Excel
 export const importTeams = (formData) => {
   return axios.post('/admin/team', formData, {
-    headers: {'Content-Type': 'multipart/form-data'}
+    headers: { 'Content-Type': 'multipart/form-data' }
   })
+}
+
+// 同步刷新队伍数据（从Domjudge拉取最新）
+export const syncTeams = () => {
+  return axios.post('/admin/team/sync')
 }

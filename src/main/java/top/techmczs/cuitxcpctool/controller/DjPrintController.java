@@ -15,7 +15,6 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
 package top.techmczs.cuitxcpctool.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -41,34 +40,39 @@ public class DjPrintController {
     private final DjPrintService djPrintService;
 
     @PostMapping("/task")
-    @Operation(description = "用于Domjudge申请打印请求，单独验证TOKEN")
+    @Operation(description = "申请打印：上传源码文件，后端自动格式化+生成PDF")
     @Parameters({
-            @Parameter(name = "file",description = "Domjudge上传的打印PDF",required = true),
-            @Parameter(name = "printTeamDTO",description = "包装了基本队伍基本信息的实体",required = true)
+            @Parameter(name = "file",description = "源码文件(c/cpp/py/txt/java)",required = true),
+            @Parameter(name = "printTeamDTO",description = "队伍信息",required = true)
     })
-    public Result<String> addPrintTask(@RequestPart("file") MultipartFile file, @RequestPart("printTeamDTO") PrintTeamDTO printTeamDTO) {
+    public Result<String> addPrintTask(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("printTeamDTO") PrintTeamDTO printTeamDTO
+    ) {
         djPrintService.addPrintTask(file, printTeamDTO);
         return Result.success(ResponseMessageConstant.SUCCESS);
     }
 
     @PostMapping("/task/done")
-    @Operation(description = "标记某个打印任务已经完成")
-    @Parameter(name = "taskId",description = "打印任务ID",required = true)
+    @Operation(description = "标记打印任务完成")
+    @Parameter(name = "taskId",description = "任务ID",required = true)
     public Result<String> successPrint(@RequestParam(value = "task_id") Long taskId) {
         djPrintService.setPrintTaskDone(taskId);
         return Result.success(ResponseMessageConstant.SUCCESS);
     }
 
     @GetMapping("task/{task_id}/download")
-    @Operation(description = "请求某个打印任务对应的PDF文件")
-    @Parameter(name = "taskId",description = "打印任务ID",required = true)
+    @Operation(description = "下载打印PDF")
+    @Parameter(name = "taskId",description = "任务ID",required = true)
     public byte[] getPdfFile(@PathVariable("task_id") Long taskId){
         return djPrintService.getPdfFileByTaskId(taskId);
     }
 
     @GetMapping("/task/page")
-    @Operation(description = "分页查询所有打印任务")
-    public Result<IPage<PrintTaskDTO>> getAllPrintTask(@Parameter(description = "当前查询的页码") @RequestParam(value = "cur_page") int curPage){
+    @Operation(description = "分页查询打印任务")
+    public Result<IPage<PrintTaskDTO>> getAllPrintTask(
+            @Parameter(description = "页码") @RequestParam(value = "cur_page") int curPage
+    ){
         return Result.success(djPrintService.queryAuthTasksByPage(curPage));
     }
 }

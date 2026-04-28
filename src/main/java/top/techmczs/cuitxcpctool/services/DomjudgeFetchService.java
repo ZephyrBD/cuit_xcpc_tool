@@ -26,11 +26,12 @@ import java.util.List;
 @Component
 public interface DomjudgeFetchService {
     DjContest getContest();
+    List<DjUser> getUsers();
     List<DjProblem> getProblems();
     List<DjTeam> getTeams();
     List<DjSubmission> getSubmissions();
     List<DjJudgement> getJudgements();
-    List<DjBalloon> getBalloons(Boolean isTodo);
+    List<DjBalloon> getSortedBalloons();
     DjMedals getMedals();
     void setBalloonDone(Long id);
 }

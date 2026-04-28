@@ -27,4 +27,5 @@ import top.techmczs.cuitxcpctool.entity.Team;
 public interface DjTeamService {
     IPage<Team> queryTeamsByPage(int curPage);
     void importTeamExcel(MultipartFile file);
+    void syncTeamsFromDomjudge();
 }

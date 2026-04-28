@@ -16,34 +16,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package top.techmczs.cuitxcpctool.dto;
+package top.techmczs.cuitxcpctool.entity;
 
-import jakarta.validation.constraints.NotNull;
+import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
-import lombok.experimental.Accessors;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
-@Accessors(chain=true)
-public class DjTeamDTO implements Serializable {
-    public DjTeamDTO() {
-    }
-    @NotNull
-    private String examNumber;
-    @NotNull
-    private String teamName;
-    @NotNull
-    private String account;
-    @NotNull
+public class ExcelTeam {
+    @ExcelProperty("ICPC_ID")
+    private String icpcId;
+
+    @ExcelProperty("PASSWORD")
     private String password;
-    @NotNull
-    private String djUrl;
-    @NotNull
-    private String token;
-    @NotNull
-    private String position;
-    @NotNull
-    private LocalDateTime loginTime;
 }

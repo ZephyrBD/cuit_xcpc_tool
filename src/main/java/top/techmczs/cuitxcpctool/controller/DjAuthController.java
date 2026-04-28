@@ -35,7 +35,7 @@ import top.techmczs.cuitxcpctool.common.QueueTaskStatus;
 import top.techmczs.cuitxcpctool.constant.ResponseMessageConstant;
 import top.techmczs.cuitxcpctool.dto.AdminDTO;
 import top.techmczs.cuitxcpctool.dto.AuthTaskDTO;
-import top.techmczs.cuitxcpctool.dto.DjTeamDTO;
+import top.techmczs.cuitxcpctool.dto.TeamDTO;
 import top.techmczs.cuitxcpctool.result.Result;
 import top.techmczs.cuitxcpctool.services.DjAuthService;
 
@@ -80,8 +80,8 @@ public class DjAuthController {
      */
     @PostMapping("/public/auth/verify")
     @Operation(description = "请求验证客户端")
-    public Result<DjTeamDTO> verifyClient(@Parameter(description = "考号") @RequestParam(value = "exam_num")String examNum, HttpServletRequest request) {
-        DjTeamDTO djTeamDTO = djAuthService.verifyClientAndGetToken(examNum, getClientId(request), request.getHeader("User-Agent"));
+    public Result<TeamDTO> verifyClient(@Parameter(description = "考号") @RequestParam(value = "exam_num")String examNum, HttpServletRequest request) {
+        TeamDTO djTeamDTO = djAuthService.verifyClientAndGetToken(examNum, getClientId(request), request.getHeader("User-Agent"));
         return Result.success(djTeamDTO);
     }
 
@@ -91,7 +91,7 @@ public class DjAuthController {
         QueueTaskStatus status = djAuthService.getAuthStatus(examNum, getClientId(request));
         // 状态为DONE（同意）时返回DjTeamDTO，否则返回状态
         if (QueueTaskStatus.DONE.equals(status)) {
-            DjTeamDTO djTeamDTO = djAuthService.getApprovedTeamInfo(examNum);
+            TeamDTO djTeamDTO = djAuthService.getApprovedTeamInfo(examNum);
             return Result.success(djTeamDTO);
         } else {
             return Result.success(status);

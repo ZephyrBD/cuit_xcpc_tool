@@ -85,11 +85,30 @@ public String getVerifyUrl(){
 
 ### 队伍导入
 
-上传的xlsx文件表头应该是：
+0.6.0-Preview后，队伍信息会从Domjudge自动拉取，上传的Excel只需要提供无法从Api查询的队伍账号的密码。
 
-| examNumber | teamName | school | position | account        | password       | teammate           | coach       |
-| ---------- | -------- | ------ | -------- | -------------- | -------------- |--------------------| -------------- |
-| {考号}       | {队名}     | {学习}   | {座位}     | {Domjudge队伍账号} | {Domjudge队伍密码} | {name1},{name2},.. | {name1},{name2},.. |
+| ICPC_ID   | PASSWORD     |
+|-----------|--------------|
+| {icpc_id} | {password}|
+
+为了使得选手和教练名字能正常获取，在Domjudge导入的队伍Json参考如下：
+
+```json
+{
+  "id": "=icpc_id",
+  "icpc_id": "example_id",
+  "group_ids": [
+    "participants"
+  ],
+  "name": "TeamName",
+  "display_name": "TeamName",
+  "organization_id": "organization_id",
+  "members": "Players: Person1,Person2,Person3,.. Coaches: Person1,Person2,..",
+  "location": {
+    "description": "Team Location"
+  }
+}
+```
 
 ### 集成xcpcio/board
 

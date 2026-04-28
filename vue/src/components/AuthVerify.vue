@@ -70,12 +70,12 @@
       <div class="md-modal-content">
         <span @click="closeAllModal" class="md-modal-close">&times;</span>
         <h2 style="font-size: 20px; font-weight: 500;">认证成功</h2>
+        <div class="md-team-info" v-html="teamInfoHtml"></div>
         <p class="md-highlight">
           注意：务必进行以下操作！！！
-          <br />你把账号和密码复制到任意文本软件中，或抄写在草稿纸上！
+          <br />请把账号和密码复制到任意文本软件中，或抄写在草稿纸上！
           <br />没有账号密码你将无法登录后续的判题系统！
         </p>
-        <div class="md-team-info" v-html="teamInfoHtml"></div>
         <button
           :disabled="redirectDisabled"
           @click="redirectToDj"

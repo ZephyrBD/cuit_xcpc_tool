@@ -53,6 +53,9 @@ public class MessageConstant {
     public static final String ILLEGAL_TOKEN = "Authentication failed: Illegal token.";
     public static final String TEAM_NOT_FOUND = "Login team {} not found.";
     public static final String TEAM_LOGIN_AGAIN = "{} Login again.";
+    public static final String TEAM_IMPORT_SUCCESS = "The team import was successful. There are {} pieces of data in total.";
+    public static final String TEAM_IMPORT_FAILED = "The team Excel import failed.";
+    public static final String TEAM_SYNC_SUCCESS = "The team synchronization was refreshed successfully. There are {} pieces of data in total.";
     public static final String AUTH_TASK_NOT_EXIST = "Authentication task not exist.";
     public static final String IMPORT_TEAM_FROM_EXCEL = "Import teams from excel failed.";
     public static final String ADD_PRINT_TASK_FAILED = "Add print task failed.";

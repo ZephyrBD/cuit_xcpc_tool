@@ -50,6 +50,9 @@ public class DjTeam {
     @JsonProperty("hidden")
     private Boolean hidden;
 
+    @JsonProperty("public_description")
+    private String publicDescription;
+
     @Data
     public static class Location {
         @JsonProperty("description")

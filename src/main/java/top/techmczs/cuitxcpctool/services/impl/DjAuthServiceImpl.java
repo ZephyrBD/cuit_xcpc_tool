@@ -33,7 +33,7 @@ import top.techmczs.cuitxcpctool.constant.MessageConstant;
 import top.techmczs.cuitxcpctool.constant.SseEventConstant;
 import top.techmczs.cuitxcpctool.dto.AdminDTO;
 import top.techmczs.cuitxcpctool.dto.AuthTaskDTO;
-import top.techmczs.cuitxcpctool.dto.DjTeamDTO;
+import top.techmczs.cuitxcpctool.dto.TeamDTO;
 import top.techmczs.cuitxcpctool.entity.AuthTask;
 import top.techmczs.cuitxcpctool.entity.Team;
 import top.techmczs.cuitxcpctool.entity.TeamClient;
@@ -136,7 +136,7 @@ public class DjAuthServiceImpl implements DjAuthService {
     }
 
     @Override
-    public DjTeamDTO verifyClientAndGetToken(String examNum, String clientId,String userAgent) {
+    public TeamDTO verifyClientAndGetToken(String examNum, String clientId, String userAgent) {
         //判断是否存在Client ID
         if(clientId == null || clientId.isBlank()){
             log.warn(MessageConstant.ILLEGAL_CLIENT,examNum);
@@ -168,7 +168,7 @@ public class DjAuthServiceImpl implements DjAuthService {
         }
 
         enqueueAuthTask(authTask.setOldClientId(clientId),true);
-        DjTeamDTO djTeamDTO = new DjTeamDTO().setToken(verifyAndGetToken(userAgent,examNum));
+        TeamDTO djTeamDTO = new TeamDTO().setToken(verifyAndGetToken(userAgent,examNum));
         saveClientIdToTeamClient(examNum,clientId);
         BeanUtils.copyProperties(team,djTeamDTO);
         String url = toolProperties.getVerifyUrl();
@@ -177,12 +177,12 @@ public class DjAuthServiceImpl implements DjAuthService {
     }
 
     @Override
-    public DjTeamDTO getApprovedTeamInfo(String examNum) {
+    public TeamDTO getApprovedTeamInfo(String examNum) {
         Team team = teamMapper.selectById(examNum);
         if (team == null) {
             throw new TeamNotExistException();
         }
-        DjTeamDTO djTeamDTO = new DjTeamDTO();
+        TeamDTO djTeamDTO = new TeamDTO();
         BeanUtils.copyProperties(team, djTeamDTO);
         String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), jwtProperties.getTtl(),examNum);
         String url = toolProperties.getVerifyUrl();

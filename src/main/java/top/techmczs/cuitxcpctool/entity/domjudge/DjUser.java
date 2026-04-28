@@ -16,16 +16,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package top.techmczs.cuitxcpctool.entity;
+package top.techmczs.cuitxcpctool.entity.domjudge;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data
-@Accessors(chain = true)
-public class AdminLoginDTO {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Accessors(chain=true)
+public class DjUser {
+    @JsonProperty("team_id")
+    private String teamId;
 
-    private String userName;
-
-    private String password;
+    @JsonProperty("username")
+    private String username;
 }
