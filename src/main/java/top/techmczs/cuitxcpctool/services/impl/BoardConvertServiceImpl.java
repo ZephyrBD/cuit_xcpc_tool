@@ -235,6 +235,7 @@ public class BoardConvertServiceImpl implements BoardConvertService {
             run.setProblemId(problemMap.get(sub.getProblemId()));
             long submitTime = startTime + TimeUtil.durationToMillis(sub.getContestTime());
             run.setTimestamp(TimeUtil.durationToMillis(sub.getContestTime()));
+            if (submitTime > endTime) continue;
             if (submitTime > freezeAbsoluteTime && now < unFreezeAbsoluteTime) {
                 run.setStatus("PENDING");
             } else {
