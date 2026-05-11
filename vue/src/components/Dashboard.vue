@@ -203,6 +203,8 @@ const fetchTeams = async () => {
   await fetchTeamsOnly()
 }
 
+const printedBalloonIds = new Set()
+
 const connectGlobalSse = () => {
   if (globalSSE.value) globalSSE.value.close();
   const token = localStorage.getItem('token')
@@ -213,12 +215,12 @@ const connectGlobalSse = () => {
     try {
       const res = JSON.parse(e.data);
       const task = res.data?.[0];
-      if (task) { 
+      if (task) {
         currentAuthTask.value = task;
         if(task.status!=='AUTO_DONE'){
-          authTaskDialogVisible.value = true; 
+          authTaskDialogVisible.value = true;
         }
-        fetchAuthTasks(); 
+        fetchAuthTasks();
       }
     } catch {}
   });
@@ -233,7 +235,6 @@ const connectGlobalSse = () => {
         const pdf = await api.print.downloadPrintPdf(task.taskId);
         printByIframe(pdf.data);
         printStatus.value = { type: 'success', message: '自动打印完成' };
-        //setTimeout(() => { currentPrintTask.value = null; printStatus.value = null; }, 3000);
       }
     } catch (err) {
       if(autoPrintWindowVisible.value) printStatus.value = { type: 'error', message: '打印失败' };
@@ -246,6 +247,8 @@ const connectGlobalSse = () => {
       const res = JSON.parse(e.data);
       const task = res.data;
       if (autoBalloonWindowVisible.value && task) {
+        if (printedBalloonIds.has(task.balloonId)) return  // ← 去重
+        printedBalloonIds.add(task.balloonId)              // ← 记录
         currentBalloonTask.value = task;
         balloonStatus.value = { type: 'loading', message: '正在自动打印气球小票...' };
         printBalloonTxt(task, formatDateTime);
@@ -262,9 +265,14 @@ const connectGlobalSse = () => {
   globalSSE.value.onerror = () => { globalSSE.value.close(); setTimeout(connectGlobalSse, 3000); };
 };
 
+const startAutoBalloon = () => {
+  printedBalloonIds.clear()  // ← 重置，允许重新打印
+  autoBalloonWindowVisible.value = true
+  ElMessage.success('自动气球打印已开启')
+}
+
 const startAutoPrint = () => { autoPrintWindowVisible.value = true; ElMessage.success('自动打印已开启'); };
 const stopAutoPrint = () => { autoPrintWindowVisible.value = false; currentPrintTask.value = null; printStatus.value = null; ElMessage.success('自动打印已停止'); };
-const startAutoBalloon = () => { autoBalloonWindowVisible.value = true; ElMessage.success('自动气球打印已开启'); };
 const stopAutoBalloon = () => { autoBalloonWindowVisible.value = false; currentBalloonTask.value = null; balloonStatus.value = null; ElMessage.success('自动气球打印已停止'); };
 
 const handleAuthPageChange = (p) => { authCurrentPage.value = p; fetchAuthTasks(); };

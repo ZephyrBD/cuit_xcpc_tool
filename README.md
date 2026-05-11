@@ -60,7 +60,7 @@ public String getVerifyUrl(){
 > `Domjudge`使用的打印命令：
 > 
 > ```bash
-> /opt/print.sh "[location]" "[teamname]" "[teamid]" "[file]" 2>&1
+> /opt/print_pdf.sh "[location]" "[teamname]" "[teamid]" "[file]" "[original]" 2>&1
 > ```
 > 
 > 脚本在`script`下有示例。

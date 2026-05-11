@@ -90,7 +90,6 @@ public class DjTeamServiceImpl implements DjTeamService {
                 .collect(Collectors.toMap(Team::getExamNumber, Team::getPassword));
 
         List<Team> newTeamList = buildTeam(null, passwordMap);
-
         teamMapper.insertOrUpdate(newTeamList);
         log.info(MessageConstant.TEAM_SYNC_SUCCESS, newTeamList.size());
     }

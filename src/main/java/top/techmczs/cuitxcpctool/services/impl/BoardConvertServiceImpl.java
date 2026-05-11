@@ -33,6 +33,7 @@ import top.techmczs.cuitxcpctool.services.DomjudgeFetchService;
 import top.techmczs.cuitxcpctool.utils.StatusMappingUtil;
 import top.techmczs.cuitxcpctool.utils.TimeUtil;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,7 @@ public class BoardConvertServiceImpl implements BoardConvertService {
         DjContest contest = domjudgeFetchService.getContest();
         BoardContestListDTO list = new BoardContestListDTO();
 
-        int currentYear = java.time.LocalDate.now().getYear();
+        int currentYear = LocalDate.now().getYear();
         String year = String.valueOf(currentYear);
         String contestKey = contest.getId();
 

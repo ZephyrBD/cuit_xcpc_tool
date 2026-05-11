@@ -28,19 +28,19 @@ import top.techmczs.cuitxcpctool.entity.Team;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 /**
- * PDF工具类（支持每页页眉 + 中文等宽字体）
+ * PDF工具类（页眉+页码嵌入分割线+位置修复）
  */
 public class PdfUtil {
     private static final String BASE_DIR = System.getProperty("user.dir");
     public static final String PDF_DIR = BASE_DIR + File.separator + "pdf" + File.separator;
-    // 你使用的字体路径
     private static final String FONT_PATH = "fonts/MapleMono-NF-CN-Regular.ttf";
     public static BaseFont MAPLE_FONT;
 
-    // 静态加载字体
     static {
         new File(PDF_DIR).mkdirs();
         try {
@@ -58,35 +58,71 @@ public class PdfUtil {
     }
 
     /**
-     * 页眉事件：每页自动生成页眉（核心功能）
+     * 页眉事件：页码嵌入分割线，位置100%对齐修复版
      */
     public static class HeaderEvent extends PdfPageEventHelper {
         private final Team team;
+        private int pageNumber = 0;
+        private PdfTemplate totalPageTemplate;
 
         public HeaderEvent(Team team) {
             this.team = team;
         }
 
-        // 每页结束时绘制页眉（保证每页都有）
+        @Override
+        public void onOpenDocument(PdfWriter writer, Document document) {
+            // 模板宽度设大一点，避免数字溢出
+            totalPageTemplate = writer.getDirectContent().createTemplate(20, 16);
+        }
+
         @Override
         public void onEndPage(PdfWriter writer, Document document) {
+            pageNumber++;
             PdfContentByte cb = writer.getDirectContent();
-            // 页眉字体样式
             Font headerFont = new Font(MAPLE_FONT, 11);
-            // 页眉内容
-            String header = String.format("Team: %s | ICPC ID: %s | Location: %s",
+
+            // 1. 顶部团队信息行
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String now = LocalDateTime.now().format(formatter);
+            String header = String.format("[%s] %s (%s) | %s",
+                    team.getPosition(),
                     team.getTeamName(),
                     team.getExamNumber(),
-                    team.getPosition());
-            String splitLine = "-------------------------------------------------------------------------------";
+                    now);
 
-            // 写入页眉（固定在页面顶部）
+            // 先绘制固定部分：-- Page X of
+            String pagePrefix = String.format("-- Page %d of ", pageNumber);
+            // 后面的横线和固定文本
+            String suffix = " -------------------------------------------CUIT XCPC TOOL--";
+
+            // 绘制前缀
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
+                    new Phrase(pagePrefix, headerFont),
+                    document.left(), document.top(), 0);
+
+            // 计算"-- Page X of "这段文本的宽度，用于定位总页数
+            float prefixWidth = headerFont.getBaseFont().getWidthPoint(pagePrefix, headerFont.getSize());
+
+            // 绘制总页数模板（和前缀同一行，Y坐标相同）
+            cb.addTemplate(totalPageTemplate, document.left() + prefixWidth, document.top());
+
+            // 绘制后面的横线和固定文本（接在总页数后面）
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
+                    new Phrase(suffix, headerFont),
+                    document.left() + prefixWidth + 20, document.top(), 0);
+
+            // 绘制顶部团队信息
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
                     new Phrase(header, headerFont),
-                    document.left(), document.top() + 10, 0);
-            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT,
-                    new Phrase(splitLine, headerFont),
-                    document.left(), document.top(), 0);
+                    document.left(), document.top() + 13, 0);
+        }
+
+        @Override
+        public void onCloseDocument(PdfWriter writer, Document document) {
+            // 写入总页数，和文本基线对齐
+            ColumnText.showTextAligned(totalPageTemplate, Element.ALIGN_LEFT,
+                    new Phrase(String.valueOf(pageNumber), new Font(MAPLE_FONT, 11)),
+                    0, 0, 0);
         }
     }
 
@@ -97,23 +133,16 @@ public class PdfUtil {
         return path;
     }
 
-    /**
-     * 生成代码PDF（每页带页眉 + 中文等宽）
-     */
     public static String generatePdfFromCode(String code, Team team) throws Exception {
         String pdfPath = PDF_DIR + UUID.randomUUID() + ".pdf";
         Document document = new Document(PageSize.A4);
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(pdfPath));
-
-        // 注册页眉事件
         writer.setPageEvent(new HeaderEvent(team));
 
         document.open();
-        // 代码字体样式
         Font codeFont = new Font(MAPLE_FONT, 10);
         Paragraph codePara = new Paragraph(code, codeFont);
         codePara.setLeading(12);
-        // 直接添加代码，页眉由事件自动生成
         document.add(codePara);
 
         document.close();
